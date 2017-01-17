@@ -1,0 +1,8 @@
+http://www.perbang.dk/rgbgradient/
+From 0000CC to CC00FF over 20 steps, using the HSV Gradient (Inverse)
+Picked a variety of them
+
+open/saveas = 1/3/4: 0000cc, 00aed4
+3d/refresh/data/jump/detail = 6/8/10/10/11: 00d989, 00de12, 69e400, 69e400, aae600
+trace/envelope = 13/14: eca900, ee6900
+brush/add/select = 17/18/19: f6005d, f900a2, fc00e9
