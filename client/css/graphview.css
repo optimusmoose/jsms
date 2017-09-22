@@ -109,6 +109,11 @@ body {
     font-size: 80%;
 }
 
+.status-current-pt {
+    font-family: monospace;
+    font-size: 80%;
+}
+
 /* The dividers separating the button sets on the sidebar */
 .divider {
     border: 0;

@@ -8,7 +8,7 @@ DataControls = function(graph) {
 
     var scope = this;
 
-    var mstart = new THREE.Vector3();
+    var mstart = null;
     var mend = new THREE.Vector3();
     var mdelta = new THREE.Vector3();
 
@@ -21,6 +21,10 @@ DataControls = function(graph) {
 
     // hook up global input handlers
     this.el.addEventListener('mousedown', onMouseDown, false);
+    // ok to use document here because mouseDown is attached to the specific target element
+    document.addEventListener('mousemove', onMouseMove, false);
+    document.addEventListener('mouseup', onMouseUp, false);
+
     window.addEventListener('keydown', onKeyDown, false);
     window.addEventListener('keyup', onKeyUp, false);
     this.el.addEventListener('wheel', onMouseWheel, false);
@@ -75,10 +79,8 @@ DataControls = function(graph) {
                 return;
             }
             
+            mstart = new THREE.Vector3();
             mstart.copy(mousePoint);
-            // ok to use document here because mouseDown is attached to the specific target element
-            document.addEventListener('mousemove', onMouseMove, false);
-            document.addEventListener('mouseup', onMouseUp, false);
             
             scope.dragZoom = graph.dragZoomRect.visible = event.ctrlKey;
         }
@@ -87,13 +89,13 @@ DataControls = function(graph) {
     // continue panning
     function onMouseMove(event) {
         if (!scope.enabled) { return; }
+
+        var mousePoint = graph.getMousePosition(event);
+        if (mousePoint === null) {
+            return;
+        }
         
-        if (event.button === 0) {
-            var mousePoint = graph.getMousePosition(event);
-            if (mousePoint === null) {
-                return;
-            }
-            
+        if (mstart) {
             mend.copy(mousePoint);
             mdelta.subVectors(mend, mstart);
             
@@ -104,6 +106,30 @@ DataControls = function(graph) {
                 mstart.copy(mend);
             }
         }
+
+        // find point closest to mouse
+        var vr = graph.viewRange;
+        var mouseMz = mousePoint.x * vr.mzrange + vr.mzmin;
+        var mouseRt = mousePoint.z * vr.rtrange + vr.rtmin;
+
+        var closest, closestDist = Number.MAX_VALUE;
+        graph.linesArray.forEach(function(line) {
+            var mzD = Math.abs(line.mz - mouseMz);
+            var rtD = Math.abs(line.rt - mouseRt);
+
+            // only consider points within 0.5 m/z and RT units, then go by closest distance to mouse
+            if (mzD > 0.5 || rtD > 0.5) {
+                return;
+            }
+
+            var dist = Math.sqrt(mzD * mzD + rtD * rtD);
+            if (dist < closestDist) {
+                closest = line;
+                closestDist = dist;
+            }
+        });
+
+        graph.drawHoverLabel(closest);
     }
     
     // end panning
@@ -119,9 +145,8 @@ DataControls = function(graph) {
                 graph.dragZoomRect.visible = false;
                 graph.renderImmediate();
             }
-            
-            document.removeEventListener('mousemove', onMouseMove, false);
-            document.removeEventListener('mouseup', onMouseUp, false);
+
+            mstart = null;
         }
     }
     

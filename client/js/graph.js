@@ -285,6 +285,18 @@ MsGraph.prototype.drawDataLabels = function() {
     this.labelgroup.add(this.labels.mzMin, this.labels.mzMax, this.labels.rtMin, this.labels.rtMax);
 };
 
+// labels the closest point to the mouse
+MsGraph.prototype.drawHoverLabel = function(point) {
+    var currentPtText = "[ No point near mouse ]";
+    if (point) {
+        currentPtText = "[ m/z: " + MsGraph.roundTo(point.mz, 3) +
+            ", RT: " + MsGraph.roundTo(point.rt, 3) +
+            ", intensity: " + MsGraph.roundTo(point.int, 3) +
+            ", trace: " + point.trace + " ]";
+    }
+    this.containerEl.find(".status-current-pt").text(currentPtText);
+};
+
 MsGraph.makeTextSprite = function(msg, textColor, fontsize) {
     // creates a texture and a sprite so three.js will render a floating text label
     var canvas = document.createElement('canvas');
