@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   id="svg4589"
+   viewBox="0 0 32.371686 32.371682"
+   height="32.371681"
+   width="32.371685">
+  <defs
+     id="defs4591" />
+  <metadata
+     id="metadata4594">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-57.394597,-125.54227)"
+     id="layer1">
+    <path
+       id="path180"
+       style="fill:none;stroke:#00d6c2;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       d="m 89.266283,141.72811 c 0,8.66287 -7.022658,15.68584 -15.685843,15.68584 -8.66287,0 -15.685843,-7.02297 -15.685843,-15.68584 0,-8.66287 7.022973,-15.68584 15.685843,-15.68584 8.663185,0 15.685843,7.02297 15.685843,15.68584 z" />
+    <path
+       id="path208"
+       style="fill:none;stroke:#00d6c2;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       d="m 78.169238,149.41119 -12.271908,0 0,-12.2719 12.271908,0 0,12.2719 z" />
+    <path
+       id="path212"
+       style="fill:none;stroke:#00d6c2;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       d="m 78.188668,149.60075 2.576736,-3.91216 0,-12.24457 -12.18458,0 -2.831786,3.6458" />
+    <path
+       id="path216"
+       style="fill:none;stroke:#00d6c2;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       d="m 78.169263,137.13932 2.59589,-3.69511" />
+  </g>
+</svg>

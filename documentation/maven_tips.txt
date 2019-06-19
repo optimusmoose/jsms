@@ -1,0 +1,32 @@
+------------------------------------------------
+Tips on building a Maven project on command line
+------------------------------------------------
+
+Prerequisites: 
+	Apache Maven - https://maven.apache.org/download.cgi
+	
+pom.xml:
+	A Maven project root directory is denoted by the existence of pom.xml.
+	This file instructs Maven how to build the project. Includes version
+	number, dependencies, Maven project identifiers (known as Maven 
+	Coordinates), Maven plugins and other build configurations.
+	
+Maven commands:
+	mvn clean
+		Deletes the ./targets directory if exists
+	mvn validate
+		Validates the project in preparation of the build
+	mvn compile
+		Compiles the includes source code
+	mvn package***
+		Packages the compiled code into the specified package format (i.e. .jar)
+	mvn install
+		Places the package into the local Maven repository (in user's home directory)
+	mvn deploy
+		Deploys the package to a remote distribution repository
+		
+Using Maven to build MsDataServer jar file:
+	1) On a command line navigate to msViz/msDataServer
+	2) Ensure pom.xml exists at msDataServer root
+	3) Run command "mvn package"
+	- jar file will be located in msDataServer/targets

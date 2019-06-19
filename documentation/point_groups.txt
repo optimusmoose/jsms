@@ -1,0 +1,50 @@
+Point Groups: Isotopic Traces and Envelopes
+
+  A "trace" is any region or set of points defined by the user.
+After a trace is created, points can be added to or removed from it
+and many separate traces will exist simultaneously. When points have
+been grouped as a trace, they all become the same color. When the whole
+graph is viewed at once every trace is colored differently from its
+neighbors so that it is obvious where the traces are.  
+
+  When points are selected as part of a trace using the brush, only the
+ones visible at the current detail level are counted. So the selection
+is not only of a region but of a region in the *visible* data set. So,
+points that are only visible at a higher level of detail will not be
+part of the trace. This behavior is important and by design.
+
+  The user can use a rectangle, which does include all points that are
+in the area, visible or not.
+
+  Further up the hierarchy, an envelope is a set of traces. There can be
+any number of envelopes containing traces just like traces contain
+points. The user will switch between envelope edit mode and trace edit
+mode using buttons on the screen or keyboard shortcuts. As in trace edit
+mode, every envelope will have a different color so you can see where
+each envelope is.
+
+  The method of point selection for traces and envelopes is a paintbrush
+that highlights and paints points near to the mouse cursor on-screen.
+
+  The mzTree knows which points are in what trace and what traces are in
+what envelopes. Each point has a trace associated to it and a mapping
+table is maintained between traces and envelopes as well. The client
+is aware of these relationships and communicates changes to the server
+as the user makes selections. So that the server is not
+contacted too often, the tracing system can queue updates to the server
+and send many updates at once (batching them). The server update can
+happen every several seconds or when the user has not clicked for a time.
+
+  An undo system has been implemented on the server.
+
+
+DETAILS AND SPECIFICS
+
+MODES and KEYBOARD/BUTTONS assignments
+Modes: trace, envelope, or neither
+For viewing - right click always rotates
+
+In the trace/envelope modes:
+  "New" button - activates a new trace/envelope
+  "Select" button - next click on the screen selects trace/envelope to add to
+  Click/drag: add, Ctrl + Click/drag: remove

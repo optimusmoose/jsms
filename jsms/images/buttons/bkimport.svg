@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="32"
+   height="32"
+   viewBox="0 0 31.999999 31.999998"
+   id="svg2"
+   version="1.1">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     style="stroke:#2ae100;stroke-opacity:1"
+     id="layer1"
+     transform="translate(0,-1020.3622)">
+    <circle
+       style="opacity:0.98500001;fill:none;fill-opacity:1;stroke:#2ae100;stroke-width:0.99999988;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4138"
+       cx="15.999998"
+       cy="1036.3622"
+       r="15.37326" />
+  </g>
+  <g
+     style="stroke:#2ae100;stroke-opacity:1"
+     id="g12">
+    <path
+       style="stroke:#2ae100;stroke-opacity:1"
+       fill="none"
+       stroke-width="1"
+       stroke-opacity="null"
+       fill-opacity="null"
+       d="m6.433304,21.452212l4.214459,-8.127245l16.857835,0l-4.214459,8.127245l-16.857835,0z"
+       id="svg_5"
+       stroke="#69e400" />
+    <line
+       style="stroke:#2ae100;stroke-opacity:1"
+       fill="none"
+       stroke="#69e400"
+       stroke-width="0.5"
+       stroke-opacity="null"
+       fill-opacity="null"
+       x1="6.093256"
+       y1="21.622134"
+       x2="6.410635"
+       y2="9.335051"
+       id="svg_6"
+       stroke-linejoin="null"
+       stroke-linecap="null"
+       transform="rotate(-1.4116356372833252 6.251945495605327,15.478591918945323) " />
+    <line
+       style="stroke:#2ae100;stroke-opacity:1"
+       fill="none"
+       stroke="#69e400"
+       stroke-width="1"
+       stroke-opacity="null"
+       fill-opacity="null"
+       x1="6.319955"
+       y1="9.60709"
+       x2="11.67005"
+       y2="9.60709"
+       id="svg_7"
+       stroke-linejoin="null"
+       stroke-linecap="null" />
+    <line
+       style="stroke:#2ae100;stroke-opacity:1"
+       fill="none"
+       stroke="#69e400"
+       stroke-width="1"
+       stroke-opacity="null"
+       fill-opacity="null"
+       x1="11.398012"
+       y1="9.56175"
+       x2="11.398012"
+       y2="10.695245"
+       id="svg_8"
+       stroke-linejoin="null"
+       stroke-linecap="null" />
+    <line
+       style="stroke:#2ae100;stroke-opacity:1"
+       fill="none"
+       stroke="#69e400"
+       stroke-width="1"
+       stroke-opacity="null"
+       fill-opacity="null"
+       x1="11.398012"
+       y1="10.423206"
+       x2="23.911793"
+       y2="10.468546"
+       id="svg_9"
+       stroke-linejoin="null"
+       stroke-linecap="null" />
+    <line
+       style="stroke:#2ae100;stroke-opacity:1"
+       fill="none"
+       stroke-width="1"
+       stroke-opacity="null"
+       fill-opacity="null"
+       x1="23.662424"
+       y1="10.264518"
+       x2="23.617085"
+       y2="13.245522"
+       id="svg_10"
+       stroke-linejoin="null"
+       stroke-linecap="null"
+       stroke="#69e400" />
+  </g>
+</svg>

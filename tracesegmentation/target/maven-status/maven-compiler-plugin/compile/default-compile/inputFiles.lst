@@ -1,0 +1,15 @@
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/PointDatabaseConnection.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/PurityScoringMethod.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/ConsoleTraceParametersProvider.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/SSEScoringMethod.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/HttpPointDatabaseConnection.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/SegmentationScorer.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/NMIScoringMethod.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/Point.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/TraceParametersProvider.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/ScoringMethod.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/TraceSegmentation.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/NTCDScoringMethod.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/DefaultTraceParametersProvider.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/PointTraceDatabase.java
+/Users/robertsmith/Documents/jsms2_0/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/TraceSegmenter.java

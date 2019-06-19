@@ -1,0 +1,13 @@
+Maven:
+	User Guide - https://maven.apache.org/guides/getting-started/index.html
+	Lifecyles - http://www.tutorialspoint.com/maven/maven_build_life_cycle.htm	
+	Compilation Configuration - https://maven.apache.org/plugins/maven-compiler-plugin/examples/compile-using-different-jdk.html
+	
+Spark Java Web Server:
+	***Documentation*** - http://spark.screenisland.com/overview-summary.html
+	Getting started and features - http://sparkjava.com/documentation.html
+	Spark with Maven - https://sparktutorials.github.io/2015/04/02/setting-up-a-spark-project-with-maven.html
+
+Eclipse with Maven:
+	Installing Maven Plugin - http://docs.aws.amazon.com/lambda/latest/dg/java-create-jar-pkg-maven-and-eclipse.html#java-create-jar-pkg-maven-and-eclipse-before-you-begin
+	Creating a Maven Project - https://sparktutorials.github.io/2015/04/02/setting-up-a-spark-project-with-maven.html#eclipse

@@ -1,0 +1,49 @@
+CHPP_Tricine_3022.mzML
+file size (MiB): 0.023448999046711154
+number of points: 0
+Average execution time (s): 0.7062999999999999
+
+CHPP_SDS_3009.mzML
+file size (MiB): 0.023448999046711154
+number of points: 0
+Average execution time (s): 1.1045
+
+CHPP_SDS_3002.mzML
+file size (MiB): 495.51440228789323
+number of points: 8472199
+Average execution time (s): 42.9195
+
+GRAIN_DEVELOPMENT_Z71_3.mzML
+file size (MiB): 1839.1035176358437
+number of points: 31072232
+Average execution time (s): 152.9894
+
+STEM_12.mzML
+file size (MiB): 1529.0943584366064
+number of points: 27544564
+Average execution time (s): 127.8309
+
+18185_REP2_4pmol_UPS2_IDA_1.mzML
+file size (MiB): 3562.9983679694947
+number of points: 62269515
+Average execution time (s): 293.9209
+
+POLLEN_2.mzML
+file size (MiB): 2407.2804880838894
+number of points: 42584807
+Average execution time (s): 197.2808
+
+Sheppard_Werner_RNAPORF145_09.mzML
+file size (MiB): 6412.498268827455
+number of points: 115094313
+Average execution time (s): 519.0703
+
+Sheppard_Werner_RNAPORF145_06.mzML
+file size (MiB): 6989.734385128694
+number of points: 126778190
+Average execution time (s): 549.0125
+
+Sheppard_Werner_RNAPORF145_03.mzML
+file size (MiB): 8889.232737845567
+number of points: 165229056
+Average execution time (s): 708.0173000000001

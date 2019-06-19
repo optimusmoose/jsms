@@ -1,0 +1,42 @@
+Error Logging System
+========================================================================
+
+Tutorials for Java's Logger framework are often too detailed
+or too confusing, so here's the architecture rundown:
+
+* Each class participating in error reporting has a static
+  Logger instance for that class, so messages have a class name attached.
+* There are several levels of logs: Info, Warning, and Fatal.
+* Logs can be messages or exceptions; for exceptions a stack trace
+  is automatically included in the log.
+* Logs can go to multiple places. By default, all log() calls go to
+  standard error (usually a terminal or console).
+* StartFrame.java defines a minimal TextAreaLogHandler which adds log
+  messages to a JTextArea as they come in. StartFrame registers a
+  TextAreaLogHandler on the "global" logger that receives the log
+  messages for everything in the application. The end result is that
+  all log messages appear on the StartFrame's error console.
+
+USAGE
+========================================================================
+Setup:
+ONCE at the top of the class, add
+	private static final Logger LOGGER = Logger.getLogger(*****.class.getName());
+And change ***** to the name of the class it is in
+
+Messages:
+LOGGER.log(Level.INFO, "I am a log message");
+LOGGER.log(Level.WARNING, "I am a scarier log message");
+
+Exceptions:
+try { doTheThing(); }
+catch (SomeException ex) {
+	LOGGER.log(Level.WARNING, "Could not do the thing.", ex);
+}
+
+NOTE: this "hides" the exception. The calling method will continue as if
+nothing went wrong. Empty catch blocks like this should be used only at
+high-level methods if possible.
+
+That's it! Every LOGGER.log(...) call will go to the terminal output
+and also to the StartFrame's error console if it is running.
