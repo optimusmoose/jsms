@@ -1,6 +1,38 @@
 # JS-MS
 *JavaScript Mass Spectrometry*, a visualization GUI for Mass Spectrometry signal data. Presents a robust, 3-dimensional graph view that allows the creation, editing, and saving of XIC and envelope annotations in addition to panning, rotating, and zooming actions. Interfaces via HTTP to the MsDataServer API for access to MS data stored in the MzTree format.
 
+## Citations
+If you are publishing any work related to the execution of this software, *please cite the following papers* which describe it:
+> @article{rosen2017js,
+  title={JS-MS: a cross-platform, modular javascript viewer for mass spectrometry signals},
+  author={Rosen, Jebediah and Handy, Kyle and Gillan, Andr{\'e} and Smith, Rob},
+  journal={BMC bioinformatics},
+  volume={18},
+  number={1},
+  pages={469},
+  year={2017},
+  publisher={BioMed Central}
+}
+
+> @article{handy2017fast,
+  title={Fast, axis-agnostic, dynamically summarized storage and retrieval for mass spectrometry data},
+  author={Handy, Kyle and Rosen, Jebediah and Gillan, Andr{\'e} and Smith, Rob},
+  journal={PloS one},
+  volume={12},
+  number={11},
+  pages={e0188059},
+  year={2017},
+  publisher={Public Library of Science}
+}
+
+> @article{gutierrez2019xnet,
+  title={XNet: A Bayesian approach to Extracted Ion Chromatogram Clustering for Precursor Mass Spectrometry Data},
+  author={Gutierrez, Matthew and Handy, Kyle and Smith, Rob},
+  journal={Journal of proteome research},
+  year={2019},
+  publisher={ACS Publications}
+}
+
 ## Dependencies
 * Run: Java 8 JRE or higher, WebGL (included in major browsers)
 * Build (optional): Java 8 JDK, Apache Maven
@@ -29,8 +61,11 @@
 ## Build (optional)
 - Run `mvn package` from within the project root directory
 
-## License
-This work is published under the Gnu General Public License (GPL) v2. Please see the LICENSE file at the root level of this repository for more details.
+## Modules
+- msDataServer: mzTree core and HTTP API. Includes a GUI with buttons to perform most actions provided by other modules
+- tracesegmentation: creates segmentation data, extensible with different file format accessors
+- xnet: trace clustering (traces -> envelopes) and data types used by mzTree storage
+- correspondence: matching of finished envelope data from several files to highlight similarities and differences between data sets
 
-## Notice
-For commercial license opportunities, contact Dr. Rob Smith at robert.smith@mso.umt.edu.
+## License
+This work is published under the MIT license.

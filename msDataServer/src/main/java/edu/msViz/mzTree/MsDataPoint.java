@@ -17,7 +17,7 @@ public class MsDataPoint
     // HashMap$Node -> 32 bytes per point
     // Integer (used as hash key) -> 16 bytes per point
     public static byte MEM_NUM_BYTES_PER_POINT = 90;
-    
+
     // number of bytes required to store point on disk (not counting ID)
     // mz: 8 bytes
     // rt: 4 bytes
@@ -28,19 +28,19 @@ public class MsDataPoint
 
     // point's global ID, corresponds to position in point file
     public int pointID;
-    
+
     // point's assigned trace
     public int traceID;
-    
+
     // point's mz value
     public double mz;
-    
+
     // point's rt value
     public float rt;
-    
+
     // point's intensity value
     public double intensity;
-        
+
     /**
      * Default constructor accepting point ID and values
      * @param pointID point's assigned ID (originates from mzml parse)
@@ -55,7 +55,7 @@ public class MsDataPoint
         this.rt = rt;
         this.intensity = intensity;
     }
-    
+
     /**
      * Checks if the datapoint is within the bounds of the query
      * @param mzMin query mz lower bound
@@ -65,21 +65,23 @@ public class MsDataPoint
      * @return true if datapoint is within query bounds, false otherwise
      */
     public boolean isInBounds(double mzMin, double mzMax, float rtMin, float rtMax){
-        return (this.mz <= mzMax && this.mz >= mzMin 
+        return (this.mz <= mzMax && this.mz >= mzMin
                 && this.rt <= rtMax && this.rt >= rtMin);
     }
-    
+    public double getIntensity(){
+      return this.intensity;
+    }
     @Override
     public String toString(){
-        return String.valueOf(this.traceID) + ","  
+        return String.valueOf(this.traceID) + ","
                 + String.valueOf(this.mz) + "," + String.valueOf(this.rt) + "," + String.valueOf(this.intensity);
     }
-    
+
     @Override
     public boolean equals(Object aThat) {
         if ( this == aThat ) return true;
         if ( !(aThat instanceof MsDataPoint) ) return false;
-        
+
         MsDataPoint that = (MsDataPoint)aThat;
         return this.intensity == that.intensity && this.mz == that.mz && this.rt == that.rt && this.traceID == that.traceID; //&& this.envelopeID == that.envelopeID;
     }

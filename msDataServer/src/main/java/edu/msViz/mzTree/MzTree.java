@@ -48,8 +48,8 @@ public final class MzTree
 
     // there is really no good reason for this...
     public static final int DEFAULT_TREE_HEIGHT = 4;
-    
-    // number of points per node should assume an whole number of disk blocks 
+
+    // number of points per node should assume an whole number of disk blocks
     // some disks ship with blocks of size 4096B, some with blocks of 512B. luckily 512 is a multiple of 4096
     // an MsDataPoint requires 22B, so we need the LCM of 4096 and 22, which is 45056
     // 45056B is 11 4096B disk blocks, 88 512B disk blocks, and 2048 points.
@@ -59,42 +59,42 @@ public final class MzTree
     // ensures that we don't have a tiny branching factor that produces
     // a very tall tree (such as 2...)
     private static final int MINIMUM_BRANCHING_FACTOR = 4;
-    
+
     // fraction of heap alloted for MsDataPoints
     private static final float HEAP_FRACTION = .5f;
-    
+
     // the branching factor of the tree (number of children per root/hidden node)
     public int branchingFactor;
 
     // the height of the tree
     public short treeHeight;
-    
+
     // the tree's head node
     public MzTreeNode head;
-    
+
     // the summarizer used to form the summarized collections of data
     // at the root/intermediate nodes
     public SummarizationStrategy summarizer;
-    
+
     // point map, keyed by pointID for unified point storage
     public PointCache pointCache;
-    
+
     // mapping of traceIDs to envelopeIDs
     public Map<Integer,Integer> traceMap;
-    
+
     // disk storage implementation
     public StorageFacade dataStorage;
 
     // intensity tracking data
     public boolean trackIntensity = true;
     public IntensityTracker intensityTracker;
-    
+
     // static storage interface choice
     private static final StorageFacadeFactory.Facades STORAGE_INTERFACE_CHOICE = StorageFacadeFactory.Facades.Hybrid;
-    
+
     // import progress monitor
     private ImportState importState;
-        
+
     /**
      * No argument constructor for basic initialization
      * @param importMonitor import progress monitor
@@ -135,37 +135,37 @@ public final class MzTree
     }
 
     /**
-     * 
+     *
      * Loads an mzTree either by building from mzML or by reconnecting to an mzTree
      * @param filePath The path to the mzML or mzTree file
      * @param summarizationStrategy strategy to be used for summarization of points
-     * @throws Exception 
+     * @throws Exception
      */
     public void load(String filePath, Strategy summarizationStrategy) throws Exception
     {
         // construct the summarizer corresponding to user's choice
-        this.summarizer = SummarizationStrategyFactory.create(summarizationStrategy);        
+        this.summarizer = SummarizationStrategyFactory.create(summarizationStrategy);
 
         // create ImportState and set source file location
         this.importState.reset();
         importState.setSourceFilePath(filePath);
-        
-        try 
+
+        try
         {
             long start = System.currentTimeMillis();
-            
+
             // csv load
             if(filePath.endsWith(".csv"))
             {
                 this.csvLoad(filePath);
             }
-            
+
             // mzml load
             else
             {
                 // initialize mzmlParser
                 MzmlParser mzmlParser = new MzmlParser(filePath);
-                
+
                 // if the user specified a memory-conservative load
                 // and the partitioned load is necessary then perform a partitioned load
                 if(this.partitionedLoadConfiguration(mzmlParser, Paths.get(filePath)))
@@ -184,11 +184,11 @@ public final class MzTree
 
             importState.setImportStatus(ImportStatus.READY);
             LOGGER.log(Level.INFO, "Tree Build Real Time: " + (System.currentTimeMillis() - start));
-            
-        } 
-        catch (DataFormatException | XMLStreamException ex) 
+
+        }
+        catch (DataFormatException | XMLStreamException ex)
         {
-            // try as an mzTree file instead of XML+build in the 
+            // try as an mzTree file instead of XML+build in the
             // occurence of DataFormatException or XMLStreamException
 
             this.traceMap = HashIntIntMaps.newMutableMap();
@@ -198,7 +198,7 @@ public final class MzTree
 
             // inform the importState of an .mzTree load
             this.importState.setImportStatus(ImportStatus.LOADING_MZTREE);
-            
+
             // create mzTree from existing file
 
             // recursively build tree from root node
@@ -248,16 +248,16 @@ public final class MzTree
      * @param mzmlParser input mzml file parser
      * @throws XMLStreamException
      * @throws DataFormatException
-     * @throws IOException 
+     * @throws IOException
      */
     private void partitionedLoad(MzmlParser mzmlParser) throws XMLStreamException, DataFormatException, IOException
     {
 
         LOGGER.log(Level.INFO, "Partitioned load w/ " + this.branchingFactor + " partitions");
-        
+
         // signal to the import monitor that tree building has begun
         this.importState.setImportStatus(ImportStatus.CONVERTING);
-        
+
         // init head node
         this.head = new MzTreeNode(this.branchingFactor);
 
@@ -265,20 +265,20 @@ public final class MzTree
             this.intensityTracker = new IntensityTracker(dataStorage.getFilePath() + "-intensity", pointCache);
             this.intensityTracker.setRunCount(this.branchingFactor);
         }
-        
+
         // iterate through each level 1 node, loading partition and
         // constructing separately
         for(int i = 0; i < this.branchingFactor; i++)
-        {            
+        {
             // current level 1 node
             MzTreeNode curL1Node = new MzTreeNode(this.branchingFactor);
-            
+
             // load level 1 node's partition
             List<MsDataPoint> curPartition = mzmlParser.readPartition();
 
             // recursively construct level 1 node
             this.divide(true, curPartition, curL1Node , 1);
-            
+
             // add the level 1 node to the root node
             this.head.addChildGetBounds(curL1Node);
 
@@ -293,66 +293,66 @@ public final class MzTree
         if (trackIntensity) {
             intensityTracker.finishAdding();
         }
-        
+
         // root node summarization!!!!!!
         this.head.summarizeFromChildren(MzTree.NUM_POINTS_PER_NODE, this.summarizer, this.pointCache);
-        
+
         // recursively save node information (only points are saved during construction)
         this.recursiveNodeSave(this.head, 0);
-        
+
         try {
             // commit all entries
             this.dataStorage.flush();
         } catch (Exception ex) {
             LOGGER.log(Level.WARNING, "Could not flush entries to storage", ex);
-        }   
+        }
     }
-    
+
     /**
      * Performs a standard, memory-apathetic load
      * @param mzmlParser input file parser initialized w/ target file
      * @throws IOException
      * @throws XMLStreamException
-     * @throws DataFormatException 
+     * @throws DataFormatException
      */
     private void standardLoad(MzmlParser mzmlParser, String filePath) throws Exception
-    {   
+    {
         importState.setImportStatus(ImportStatus.PARSING);
 
         List<MsDataPoint> dataset = mzmlParser.readAllData();
 
         this.buildTreeFromRoot(dataset, Paths.get(filePath));
     }
-    
+
     /**
      * Loads MS data in csv format (mz, rt, intensity, traceID, envelopeID)
      * @param filePath path to csv file
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws Exception 
+     * @throws Exception
      */
     private void csvLoad(String filePath) throws FileNotFoundException, IOException, Exception
     {
         this.importState.setImportStatus(ImportStatus.PARSING);
-        
+
         ArrayList<MsDataPoint> points = new ArrayList<>();
-        
+
         // temporary trace map
         Map<Integer,Integer> tempTraceMap = HashIntIntMaps.newMutableMap();
-        
+
         // open csv reader on targetted csv file
         try(CSVReader reader = new CSVReader(new FileReader(filePath))) {
-            
+
             String[] line = reader.readNext();
-            
-            // parse first line, but let it fail in case it is a header row 
+
+            // parse first line, but let it fail in case it is a header row
             if(line != null)
             {
                 try {
                     // convert to msdatapoint, collect
                     MsDataPoint point = this.csvRowToMsDataPoint(line);
                     points.add(point);
-                    
+
                     // add the trace if it doesn't already exist and isn't zero
                     if(point.traceID != 0 && !tempTraceMap.containsKey(point.traceID))
                         tempTraceMap.put(point.traceID, Integer.parseInt(line[4]));
@@ -360,31 +360,31 @@ public final class MzTree
                     // assuming the first row was a header row, continue
                 }
             }
-            
+
             // read the remaining lines (now guaranteed no header)
             while((line = reader.readNext()) != null)
             {
                 // convert to msdatapoint, collect
                 MsDataPoint point = this.csvRowToMsDataPoint(line);
                 points.add(point);
-                
+
                 // add the trace if it doesn't already exist
                 if(point.traceID != 0 && !tempTraceMap.containsKey(point.traceID))
                     tempTraceMap.put(point.traceID, Integer.parseInt(line[4]));
             }
         }
-        
+
         // build that tree!
         this.buildTreeFromRoot(points, Paths.get(filePath));
-        
+
         // insert the traces into the trace map and data storage
         for(Integer traceID : tempTraceMap.keySet())
         {
             this.insertTrace(traceID, tempTraceMap.get(traceID));
         }
-        
+
     }
-    
+
     /**
      * Constructs an MzTree from the dataset, starting at the root node (so no partitioned load)
      * @param dataset
@@ -394,15 +394,15 @@ public final class MzTree
         LOGGER.log(Level.INFO, "Building MzTree from " + dataset.size() + " points");
 
         this.initDataStorage(STORAGE_INTERFACE_CHOICE, getConvertDestinationPath(sourceFilePath).toString(), dataset.size());
-        
+
         // **************** STEP 1: CONFIGURE TREE ****************
 
-        // number of leafNodes = globalNumPoints / hdBlockTupleCapacity 
+        // number of leafNodes = globalNumPoints / hdBlockTupleCapacity
         int numLeafNodes = (int) Math.ceil((float) dataset.size() / (float) MzTree.NUM_POINTS_PER_NODE);
 
-        this.treeHeight = MzTree.DEFAULT_TREE_HEIGHT; 
+        this.treeHeight = MzTree.DEFAULT_TREE_HEIGHT;
 
-        // branching factor = leafnodes ^ (1/treeDepth) 
+        // branching factor = leafnodes ^ (1/treeDepth)
         this.branchingFactor = (int) Math.ceil(Math.pow(numLeafNodes, 1.0 / (double) this.treeHeight));
 
         // init head node
@@ -411,9 +411,9 @@ public final class MzTree
         // inform importState of anticipated amount of work
         int numPointsToSave = dataset.size(); // save points: dataset.length
         this.importState.setTotalWork(numPointsToSave);
-        
+
         // **************** STEP 2: BUILD ****************
-        
+
         this.importState.setImportStatus(ImportStatus.CONVERTING);
 
         // divide the head node, do not sort at start (null), mzML data already sorted by RT
@@ -437,10 +437,10 @@ public final class MzTree
             LOGGER.log(Level.WARNING, "Could not persist data to storage", ex);
         }
     }
-    
+
     /**
      * Recursively divides the dataset into the mzTree, a depth first construction
-     * starting with the head node. 
+     * starting with the head node.
      * @param sort_by_rt sorting flag, rt or mz
      * @param dataset The recursive call's data partition
      * @param head The recursive call's top level node
@@ -450,7 +450,7 @@ public final class MzTree
     {
         // leaf flag
         boolean isLeaf = dataset.size() <= MzTree.NUM_POINTS_PER_NODE;
-        
+
         // LEAF: save points, get mins/maxes
         if (isLeaf)
         {
@@ -462,17 +462,17 @@ public final class MzTree
             {
                 LOGGER.log(Level.WARNING, "Could not save points to datastorage for leaf node: " + head.toString(), e);
             }
-            
+
             // collect point IDs, mz/rt/intensity min/max
             head.initLeaf(dataset);
-            
-            dataset = null; // garbage collect away   
+
+            dataset = null; // garbage collect away
         }
-        
+
         // ROOT/INTERMEDIATE: summarize, partition and recurse
         else
         {
-            
+
             // if sort_by_rt is null then don't sort, implies initial partition
             // on mzml sourced data which is already sorted by RT
             if(sort_by_rt != null)
@@ -501,7 +501,7 @@ public final class MzTree
 
             // free dataset for GC
             dataset = null;
-            
+
             // distribute the partitions to child nodes
             for(List<MsDataPoint> partition : partitions)
             {
@@ -521,36 +521,36 @@ public final class MzTree
                 // collect child node
                 head.addChildGetBounds(child);
             }
-            
+
             // collect summary of points from child nodes (additionally saves pointIDs)
             head.summarizeFromChildren(MzTree.NUM_POINTS_PER_NODE, this.summarizer, this.pointCache);
             pointCache.clear();
-            
+
         } // END ROOT/INTERMEDIATE NODE
-        
+
     }
-    
+
     /**
      * Upon the user selecting a memory-conservative load, configures the tree for
      * a partitioned load according to available memory.
      *      - A minimum branching factor must be reached by the partitioned configuration,
-     *        a branching factor smaller than the minimum creates a very tall tree. 
-     *        Increasing the branching factor decreases partition size, 
-     *        thus not endangering memory consumption. 
-     *      - If the partitioned configuration returns a branching factor of 1 
+     *        a branching factor smaller than the minimum creates a very tall tree.
+     *        Increasing the branching factor decreases partition size,
+     *        thus not endangering memory consumption.
+     *      - If the partitioned configuration returns a branching factor of 1
      *        then the entire dataset will fit into memory. Revert to default configuration.
      * @param mzmlParser input mzml file parser
-     * @return false if partitioned load is unnecessary (entire dataset will fit in RAM), otherwise true 
+     * @return false if partitioned load is unnecessary (entire dataset will fit in RAM), otherwise true
      * @throws XMLStreamException
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws DataFormatException 
+     * @throws DataFormatException
      */
     private boolean partitionedLoadConfiguration(MzmlParser mzmlParser, Path sourceFilePath) throws Exception
     {
-        
+
         this.importState.setImportStatus(ImportStatus.PARSING);
-        
+
         // count the number of points in the mzML file
         int numPoints = mzmlParser.countPoints();
 
@@ -560,7 +560,7 @@ public final class MzTree
         // max allowed points to hold in memory at a time
         // = (heap size * FRACTION) / bytes per point
         int maxPointsInRam = (int) Math.floor((numBytesInHeap * MzTree.HEAP_FRACTION) / (float)MsDataPoint.MEM_NUM_BYTES_PER_POINT);
-        
+
         // number of leafNodes = globalNumPoints / hdBlockTupleCapacity
         int numLeafNodes = (int) Math.ceil((float) numPoints / (float) MzTree.NUM_POINTS_PER_NODE);
 
@@ -574,7 +574,7 @@ public final class MzTree
         {
             // ensure we use at least the minimum branching factor
             this.branchingFactor = Math.max(this.branchingFactor, MzTree.MINIMUM_BRANCHING_FACTOR);
-            
+
             // treeHeight = log_branchingFactor(numLeafNodes)
             // cool logarithmic identity: logb(n) = log(n) / log(b)
             this.treeHeight = (short)(Math.ceil(Math.log(numLeafNodes) / Math.log(this.branchingFactor)));
@@ -582,25 +582,25 @@ public final class MzTree
             // if branchingFactor unchanged by max call partitionSize == maxPointsInRam
             // else partitionSize < maxPointsInRam -> SAFE
             int partitionSize = (int) Math.floor( (float) numPoints / (float) this.branchingFactor);
-            
+
             // prepare parser for partitioned read
             // recalculate partition size
             mzmlParser.initPartitionedRead(partitionSize);
-            
+
             this.initDataStorage(STORAGE_INTERFACE_CHOICE, getConvertDestinationPath(sourceFilePath).toString(), numPoints);
-            
+
             // inform importState of the amount of work to do
             this.importState.setTotalWork(numPoints);
-            
+
             return true;
         }
         // else branching factor is 1, implying the entire dataset can fit into heap
         // return false to signal a regular load should ensue
-        else    
+        else
             return false;
-        
+
     }
-    
+
     /**
      * Recursively saves an mzTree starting at curNode
      * @param curNode node to recursively save
@@ -611,19 +611,19 @@ public final class MzTree
         try{
             // save node to db
             curNode.nodeID = this.dataStorage.saveNode(curNode, parentNodeID);
-            
+
             // save node points to db
             this.dataStorage.saveNodePoints(curNode, this.importState);
-            
+
             // recurse on chilren
             for(MzTreeNode childNode : curNode.children)
                 this.recursiveNodeSave(childNode, curNode.nodeID);
-                
+
         }
         catch(Exception e){
             LOGGER.log(Level.WARNING, "Could not save node", e);
         }
-        
+
     }
 
     public ImportState getImportState() {
@@ -643,7 +643,7 @@ public final class MzTree
      * @param storageChoice Storage interface selection
      * @param filePath (optional) location to create storage file
      * @param numPoints (Hybrid only) number of points that will be saved in file
-     * @throws Exception 
+     * @throws Exception
      */
     private void initDataStorage(StorageFacadeFactory.Facades storageChoice, String filePath, Integer numPoints) throws Exception
     {
@@ -654,11 +654,11 @@ public final class MzTree
 
         this.importState.setMzTreeFilePath(this.dataStorage.getFilePath());
     }
-    
+
     //***********************************************//
     //                    QUERY                      //
     //***********************************************//
-    
+
     /**
      * Queries the MzTree for points contained with the mz, rt bounds
      *
@@ -679,13 +679,13 @@ public final class MzTree
         mzMax = (mzMax == 0) ? this.head.mzMax : mzMax;
         rtMin = (rtMin == 0) ? this.head.rtMin : rtMin;
         rtMax = (rtMax == 0) ? this.head.rtMax : rtMax;
-                
+
         // current level in tree
         int curLevel = 0;
-        
+
         // all nodes in current level of tree within the query bounds
         ArrayList<MzTreeNode> curLevelNodesInBounds = new ArrayList<>();
-        
+
         // IDs the points in the current level that are within the query bounds
         ArrayList<MsDataPoint> curLevelPointsInBounds = new ArrayList<>();
 
@@ -747,22 +747,22 @@ public final class MzTree
      * @return ArrayList containing nodes of the next level that overlap with the query bounds
      */
     private ArrayList<MzTreeNode> collectNextLevelNodesInBounds(ArrayList<MzTreeNode> curLevelNodesInBounds, double mzMin, double mzMax, float rtMin, float rtMax){
-        
+
         // nodes in the next level that overlap the bounds of the query
         ArrayList<MzTreeNode> nextLevelNodesInBounds = new ArrayList<>();
-        
+
         // base case: curLevelNodesInBounds is empty
         // return ArrayList with the head node of the tree (guaranteed to overlap  bounds)
         if(curLevelNodesInBounds.isEmpty()){
             nextLevelNodesInBounds.add(this.head);
             return nextLevelNodesInBounds;
         }
-         
+
         // iterate through all current level nodes
         for(MzTreeNode curLevelNode : curLevelNodesInBounds)
         {
             // if there are children check each child for overlapping bounds
-            if (!curLevelNode.children.isEmpty()) 
+            if (!curLevelNode.children.isEmpty())
             {
                 // iterate through current level node's children
                 for(MzTreeNode nextLevelNode : curLevelNode.children)
@@ -771,8 +771,8 @@ public final class MzTree
                     if(this.doesOverlap(nextLevelNode, mzMin, mzMax, rtMin, rtMax))
                         nextLevelNodesInBounds.add(nextLevelNode);
                 }
-            } 
-            
+            }
+
             // else this is a leaf node not at the expected leaf level,
             // include in next level
             else
@@ -780,7 +780,7 @@ public final class MzTree
         }
         return nextLevelNodesInBounds;
     }
-    
+
     /**
      * Collects the points within a collection of MzTreeNodes that fall within
      * the given mz/rt bounds
@@ -793,7 +793,7 @@ public final class MzTree
      */
     private ArrayList<MsDataPoint> collectPointsWithinBounds(ArrayList<MzTreeNode> nodes,
                                                              double mzMin, double mzMax, float rtMin, float rtMax){
-        
+
         // collect all point IDs from all nodes
         ArrayList<Integer> allNodesPointIDs = new ArrayList<>();
         for(MzTreeNode node : nodes) {
@@ -846,11 +846,11 @@ public final class MzTree
                 // bounds overlap in rt
                 (node.rtMin <= rtMax && node.rtMax >= rtMin);
     }
-    
+
     //***********************************************//
     //                 SEGMENTATION                  //
     //***********************************************//
-    
+
     /**
      * Updates the points specified by pointIDs to have the given traceID
      * @param traceID updated traceID value
@@ -862,26 +862,26 @@ public final class MzTree
         // update the trace of each point specified in pointIDs
         for(int i = 0; i < pointIDs.length; i++)
             this.pointCache.shallowTraceUpdate(pointIDs[i], traceID);
-            
+
 
         this.dataStorage.updateTraces(traceID, pointIDs);
-      
+
     }
-    
+
     /**
      * Creates a trace in the traceMap and storage
      * @param traceID ID of the trace to add
      * @param envelopeID initial envelope for the trace
      * @throws java.lang.Exception
-     * 
+     *
      */
     public void insertTrace(int traceID, int envelopeID) throws Exception
     {
         this.traceMap.put(traceID, envelopeID);
-        
+
         this.dataStorage.insertTrace(traceID, envelopeID);
     }
-    
+
     /**
      * Deletes a trace from the traceMap and storage
      * @param traceID ID of the trace to delete
@@ -891,11 +891,16 @@ public final class MzTree
     {
         // delete trace from traceMap
         this.traceMap.remove(traceID);
-        
+
         // delete trace from storage
-        this.dataStorage.deleteTrace(traceID);        
+        this.dataStorage.deleteTrace(traceID);
     }
-    
+
+    public void deleteTraces() throws Exception
+    {
+        // delete trace from storage
+        this.dataStorage.deleteTraces();
+    }
     /**
      * Updates the envelopeID of the specified traces
      * @param envelopeID new envelope ID value
@@ -904,15 +909,15 @@ public final class MzTree
      */
     public void updateEnvelopes(int envelopeID, Integer[] traceIDs) throws Exception
     {
-        
+
         // update each trace in the trace map
         for(int i = 0; i < traceIDs.length; i++)
             this.traceMap.put(traceIDs[i], envelopeID);
-        
+
         // update traces in storage
         this.dataStorage.updateEnvelopes(envelopeID, traceIDs);
     }
-    
+
     //***********************************************//
     //                    CSV EXPORT                 //
     //***********************************************//
@@ -948,7 +953,7 @@ public final class MzTree
             throw e;
         }
     }
-    
+
     /**
      * If import status is ready, returns mz x rt bounds in order: mzmin, mzmax, rtmin, rtmax
      * Else returns null
@@ -959,15 +964,15 @@ public final class MzTree
         // if not ready, then cannot access data bounds
         if(importState.getImportStatus() != ImportStatus.READY)
             return null;
-        
+
         else
             return new MsDataRange(this.head.mzMin, this.head.mzMax, this.head.rtMin, this.head.rtMax);
     }
-    
+
     //***********************************************//
     //              TRACE PROCESSING                 //
     //***********************************************//
-      
+
     /**
      * Collects trace point data into a bundle organized by trace
      * @return trace data bundle
@@ -975,15 +980,15 @@ public final class MzTree
     public TracesBundle bundleTraces()
     {
         TracesBundle tracesBundle = new TracesBundle();
-        
+
         // query through dataset with slices along mz axis
         final double mzWindowWidth = 8.0;
         for(double mzWindowStart = this.head.mzMin; mzWindowStart < this.head.mzMax; mzWindowStart += mzWindowWidth)
         {
             double mzWindowEnd = Math.min(mzWindowStart + mzWindowWidth, this.head.mzMax);
-            
+
             List<MsDataPoint> points = this.query(mzWindowStart, mzWindowEnd, this.head.rtMin, this.head.rtMax, 0);
-            
+
             // add each point to the bundle (filter out noise and unsegmented)
             points.stream().filter(point -> point.traceID != 0 && point.traceID != -1).forEach((point) -> {
                 Integer envelope = this.traceMap.get(point.traceID);
@@ -993,15 +998,15 @@ public final class MzTree
                 tracesBundle.addPoint(point.traceID,point.mz,point.rt,point.intensity, envelope);
             });
         }
-        
+
         return tracesBundle;
     }
-    
+
     /**
      * Saves compiled traces to the database
      * Combine with bundleTraces().synthesize() if traces need to be compiled
      * @param traces compiled traces to save to database
-     * @throws Exception 
+     * @throws Exception
      */
     public void saveCompiledTraces(List<IsotopeTrace> traces) throws Exception
     {
@@ -1014,7 +1019,7 @@ public final class MzTree
         });
         this.dataStorage.flush();
     }
-    
+
     /**
      * performs the clustering command specified by the data server
      * @param sModel (String) selected model
@@ -1022,73 +1027,73 @@ public final class MzTree
      * @param filePath path to file to use as probability model when frequentist/hybrid clustering,
      *          or if training location of resulting probability file
      * @return message describing result of clustering command
-     * @throws java.lang.Exception 
+     * @throws java.lang.Exception
      */
     public String executeClusteringCommand(String sModel, boolean isTrain, String filePath) throws Exception
     {
         String returnMessage;
-        
+
         long start = System.currentTimeMillis();
-        
+
         // scrape dataset for traces data
         List<IsotopeTrace> traces = this.bundleTraces().synthesize();
-        
-        // since we have the trace data anyhow, 
+
+        // since we have the trace data anyhow,
         // let's save it if it has yet to be saved
         if(!this.tracesHaveBeenCompiled())
         {
             this.saveCompiledTraces(traces);
         }
-        
+
         // determine the model choice
         ProbabilityAggregator.PROB_MODEL model = ProbabilityAggregator.PROB_MODEL.BAYESIAN;
         model = sModel.equalsIgnoreCase("frequentist") ? ProbabilityAggregator.PROB_MODEL.FREQUENTIST : model;
         model = sModel.equalsIgnoreCase("hybrid") ? ProbabilityAggregator.PROB_MODEL.HYBRID : model;
-        
+
         // probability training
         if(model != ProbabilityAggregator.PROB_MODEL.BAYESIAN && isTrain)
         {
             new TraceClusterer().trainProbabilities(traces, filePath);
-            
+
             long end = System.currentTimeMillis();
-            
-            returnMessage = "Trained on " + traces.size() + " traces\nSaved to " 
+
+            returnMessage = "Trained on " + traces.size() + " traces\nSaved to "
                     + filePath + "\nElapsed time (ms): " + (end - start);
         }
-        
+
         // clustering
         else
         {
             // cluster the traces
             List<IsotopicEnvelope> envelopes = new TraceClusterer().clusterTraces(traces,model,filePath);
-            
+
             LOGGER.log(Level.INFO, "Writing " + envelopes.size() + " envelopes to database");
-            
+
             // delete all existing envelopes and envelope references
             this.dataStorage.deleteEnvelopes(null);
-            
+
             // TODO: do this update as a single DB transaction instead of one per envelope plus one per trace
-            
+
             // update the database to reflect the clustering assignments
             for(IsotopicEnvelope env : envelopes)
             {
                 this.dataStorage.insertEnvelope(env);
                 this.updateEnvelopes(env.envelopeID, env.traceIDs);
             }
-            
+
             long end = System.currentTimeMillis();
-            
+
             returnMessage = "Traces discovered: " + traces.size() + "\nEnvelopes created: " + envelopes.size()
                 + "\nElapsed time (ms): " + (end - start);
         }
-        
+
         return returnMessage;
     }
-    
+
     /**
      * Returns true if traces in database have been compiled, false otherwise
      * @return true if traces in database have been compiled, false otherwise
-     * @throws Exception 
+     * @throws Exception
      */
     public boolean tracesHaveBeenCompiled() throws Exception
     {
@@ -1102,18 +1107,18 @@ public final class MzTree
             IsotopeTrace trace = results.get(0);
             return trace.centroidMZ != null;
         }
-        
+
         // no traces means no compilation, return false
         else
             return false;
     }
-    
+
     public List<IsotopeTrace> recompileTraces() throws Exception {
         List<IsotopeTrace> traces = this.bundleTraces().synthesize();
         this.saveCompiledTraces(traces);
         return traces;
     }
-    
+
     //***********************************************//
     //                   HELPERS                     //
     //***********************************************//
@@ -1134,7 +1139,7 @@ public final class MzTree
         return point;
     }
 
-    public void close() 
+    public void close()
     {
         if (this.dataStorage != null) {
             this.dataStorage.close();

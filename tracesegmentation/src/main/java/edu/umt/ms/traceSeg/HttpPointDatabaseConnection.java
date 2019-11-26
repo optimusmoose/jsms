@@ -1,5 +1,4 @@
 package edu.umt.ms.traceSeg;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -15,6 +14,8 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Implements PointDatabaseConnection over HTTP for use with MsDataServer or a compatible interface
@@ -46,7 +47,7 @@ class HttpPointDatabaseConnection implements PointDatabaseConnection {
             return gson.fromJson(responseText, JsonElement.class);
         }
     }
-    
+
     private JsonObject _filestatus;
     private JsonObject getFileStatus() throws Exception {
         if (_filestatus != null) { return _filestatus; }
@@ -56,6 +57,15 @@ class HttpPointDatabaseConnection implements PointDatabaseConnection {
             return _filestatus;
         }
         throw new Exception("Expected filestatus to return a JSON object");
+    }
+
+    public List<Point> getAllPoints(double minMz, double maxMz, float minRt, float maxRt, double minIntensity) throws Exception{
+      //PlaceHolder
+      ArrayList<Point> a = new ArrayList<Point>();
+      return a;
+    }
+    public void deleteTraces() throws Exception{
+      //PlaceHolder
     }
 
     public double getMinimumIntensity() throws Exception {
@@ -110,7 +120,7 @@ class HttpPointDatabaseConnection implements PointDatabaseConnection {
         request.setHeader("Content-Type", "application/json");
         httpClient.execute(request).close();
     }
-    
+
     @Override
     public double getMzResolution(double nearMz) throws Exception {
         throw new UnsupportedOperationException("Not implemented");
