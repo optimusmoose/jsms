@@ -48,6 +48,7 @@ If you are publishing any work related to the execution of this software, *pleas
 - Click **Open File**, a file chooser dialog will appear over the MsDataServer window
 - Select an *mzML* or *MzTree* file
 - Begin interacting with the graph view
+- **NOTE**: JSMS' file storage and retrieval system incurs overhead costs that amortize well on files of reasonable or large size, but which causes notable delays even if loading small files. Please be patient! This is a one-time cost when building a tree with a new raw file. Subsequent file loads are very fast once an mzTree file is built.
 
 ## Usage: Terminal/Command-line start
 - `java -jar msDataServer/target/msDataServer-<version>.jar`

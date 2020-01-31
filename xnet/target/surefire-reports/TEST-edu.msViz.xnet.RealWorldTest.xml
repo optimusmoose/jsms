@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="8" failures="0" name="edu.msViz.xnet.RealWorldTest" time="0.589" errors="0" skipped="0">
+<testsuite tests="8" failures="0" name="edu.msViz.xnet.RealWorldTest" time="0.534" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="11.0.2+9-LTS"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home/lib"/>
     <property name="gopherProxySet" value="false"/>
-    <property name="maven.multiModuleProjectDirectory" value="/Users/robertsmith/Documents/jsms2_0"/>
+    <property name="maven.multiModuleProjectDirectory" value="/Users/robertsmith/Documents/jsms"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="java.vendor.url" value="http://java.oracle.com/"/>
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
@@ -15,7 +15,7 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="/Users/robertsmith/Documents/jsms2_0"/>
+    <property name="user.dir" value="/Users/robertsmith/Documents/jsms"/>
     <property name="java.vm.compressedOopsMode" value="Zero based"/>
     <property name="java.runtime.version" value="11.0.2+9-LTS"/>
     <property name="java.awt.graphicsenv" value="sun.awt.CGraphicsEnvironment"/>
@@ -33,7 +33,7 @@
     <property name="java.class.version" value="55.0"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
-    <property name="os.version" value="10.14.4"/>
+    <property name="os.version" value="10.14.5"/>
     <property name="library.jansi.path" value="/usr/local/Cellar/maven/3.6.1/libexec/lib/jansi-native"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="user.home" value="/Users/robertsmith"/>
@@ -64,12 +64,12 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="twoCollidingEnvsFourResultEnvs" time="0.135"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="twoEnvelopesInconsistentTest" time="0.071"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="misalignedPeaksTest" time="0.064"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="fiveTraceFiveEnvelopesTest" time="0.083"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="interleavedSlightOverlapTest" time="0.06"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="nonDescendingTest" time="0.064"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="singleSplitTest" time="0.056"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="unassignedTraceTest" time="0.056"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="twoCollidingEnvsFourResultEnvs" time="0.138"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="twoEnvelopesInconsistentTest" time="0.09"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="misalignedPeaksTest" time="0.058"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="fiveTraceFiveEnvelopesTest" time="0.07"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="interleavedSlightOverlapTest" time="0.051"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="nonDescendingTest" time="0.042"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="singleSplitTest" time="0.041"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="unassignedTraceTest" time="0.044"/>
 </testsuite>

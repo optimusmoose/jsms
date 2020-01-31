@@ -127,6 +127,7 @@ class FilePanel extends JPanel {
                     frame.dataServer.setMzTree(frame.mzTree);
                     frame.mzTree.load(filePath, SummarizationStrategyFactory.Strategy.WeightedStriding);
 
+                    LOGGER.log(Level.INFO, "Creating Mztree, please be patient.");
                     LOGGER.log(Level.INFO, "MzTree load time: " + (System.currentTimeMillis() - start));
 
                     SwingUtilities.invokeLater(this::updateFileState);
