@@ -18,7 +18,9 @@ public class ImportState extends Observable
     public enum ImportStatus {
         NONE,                   // no file is being imported
         PARSING,                // parsing or determining file type
-        CONVERTING,             // converting to mzTree format
+        CONVERTING,             // converting to mzTree format and writing mzTree points
+        INDEXING,                // creating intensity index
+        WRITING,                // writing mzTree nodes
         ERROR,                  // unknown filetype or conversion failure
         LOADING_MZTREE,         // loading mzTree format (fast)
         READY,                  // done importing
@@ -26,21 +28,20 @@ public class ImportState extends Observable
 
     // current import status
     private ImportStatus importStatus;
-    
+
     // total work to be done (float for percentage calculation)
     private float totalWork;
-    
+
     // amount of work currently completed
     private int workDone = 0;
-    
+
+    private int percentDone = 0;
+
     // path to source file (source)
     private String sourceFilePath;
 
     // path to mzTree file (destination)
     private String mzTreeFilePath;
-
-    // work interval upon which to receive updates
-    public int updateInterval = 1000;
 
     public ImportStatus getImportStatus() {
         return importStatus;
@@ -68,9 +69,7 @@ public class ImportState extends Observable
 
     public void setWorkDone(int workDone) {
         this.workDone = workDone;
-        if (this.workDone % updateInterval == 0) {
-            this.setChanged();
-        }
+        this.setChanged();
         this.notifyObservers();
     }
 
@@ -104,7 +103,7 @@ public class ImportState extends Observable
 
     /**
      * Reports the progress of an mzml import / mzTree load
-     * @return 
+     * @return
      */
     public String getStatusString()
     {
@@ -112,21 +111,33 @@ public class ImportState extends Observable
         switch(this.importStatus){
 
             case NONE:
-                return "No file selected.";
-            
+              return "No file selected.";
+
             // parsing mzml
             case PARSING:
-                return "Parsing " + this.sourceFilePath;
-            
+              return "Parsing " + this.sourceFilePath;
+
             // building mzTree from parsed mzml
             case CONVERTING:
                 if (this.mzTreeFilePath == null)
                     return "Creating mzTree file";
                 else
                 {
-                    int percentDone = (int)((this.workDone / this.totalWork) * 100);
-                    return "Importing to " + this.mzTreeFilePath + " || " + percentDone + "%";
+                    this.percentDone = (int)((this.workDone / this.totalWork) * 100);
+                    return "Writing points to " + this.mzTreeFilePath + " || " + percentDone + "%";
                 }
+
+            case INDEXING:
+              if (this.workDone == 0){
+                return "Creating intensity index || sorting points...please be patient";
+              } else {
+                this.percentDone = (int)((this.workDone / this.totalWork) * 100);
+                return "Creating intensity index" + " || " + percentDone + "%";
+              }
+
+            case WRITING:
+                this.percentDone = (int)((this.workDone / this.totalWork) * 100);
+                return "Creating node index" + " || " + percentDone + "%";
 
             case ERROR:
                 return "Failed to open file.";
@@ -141,7 +152,7 @@ public class ImportState extends Observable
             // finished
             case READY:
                 return "Import complete: " + this.mzTreeFilePath;
-                
+
             // default implies error
             default:
                 return "Server Error - Import status unknown";

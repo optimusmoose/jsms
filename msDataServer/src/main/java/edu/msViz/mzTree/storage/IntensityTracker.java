@@ -1,5 +1,7 @@
 package edu.msViz.mzTree.storage;
 
+import edu.msViz.mzTree.ImportState;
+import edu.msViz.mzTree.ImportState.ImportStatus;
 import edu.msViz.mzTree.MsDataPoint;
 import edu.msViz.mzTree.PointCache;
 
@@ -87,7 +89,11 @@ public class IntensityTracker {
 
     private int writingRun = 0;
     // adds a run of point IDs
-    public synchronized void addRun(int[] pointIds) throws IOException {
+    public synchronized void addRun(int[] pointIds, ImportState importState) throws IOException {
+        importState.setTotalWork(pointIds.length);
+        importState.setWorkDone(0);
+        importState.setImportStatus(ImportStatus.INDEXING);
+
         if (!writing) {
             throw new UnsupportedOperationException();
         }
@@ -97,6 +103,9 @@ public class IntensityTracker {
 
         for (int i = 0; i < pointIds.length; i++) {
             dataFile.writeInt(pointIds[i]);
+            if(i % 1000 == 0){
+              importState.setWorkDone(i);
+            }
         }
 
         writingRun++;

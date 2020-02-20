@@ -54,7 +54,7 @@ class FilePanel extends JPanel {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-        
+
         openButton = new JButton(OPEN_TEXT);
         openButton.setMnemonic('O');
         openButton.addActionListener(this::openClicked);
@@ -72,12 +72,12 @@ class FilePanel extends JPanel {
         closeButton.addActionListener(this::closeClicked);
         buttonPanel.add(closeButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
-        
+
         this.add(buttonPanel);
-        
+
         fileLabel = new JLabel(NO_FILE_TEXT);
         fileLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
+
         fileLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         this.add(fileLabel);
 
@@ -127,7 +127,6 @@ class FilePanel extends JPanel {
                     frame.dataServer.setMzTree(frame.mzTree);
                     frame.mzTree.load(filePath, SummarizationStrategyFactory.Strategy.WeightedStriding);
 
-                    LOGGER.log(Level.INFO, "Creating Mztree, please be patient.");
                     LOGGER.log(Level.INFO, "MzTree load time: " + (System.currentTimeMillis() - start));
 
                     SwingUtilities.invokeLater(this::updateFileState);

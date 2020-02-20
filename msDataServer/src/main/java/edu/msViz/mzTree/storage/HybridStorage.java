@@ -149,7 +149,6 @@ public class HybridStorage implements StorageFacade
     @Override
     public void savePoints(SavePointsTask task, ImportState importState) throws IOException
     {
-
         // inform the MzTreeNode of its position in the file and number of points
         task.node.numSavedPoints = task.dataset.size();
 
@@ -162,7 +161,10 @@ public class HybridStorage implements StorageFacade
             // a point is a single unit of work
             this.workDone++;
 
-            importState.setWorkDone(this.workDone);
+            // helps UI responsiveness
+            if(this.workDone % 1000 == 0){
+              importState.setWorkDone(this.workDone);
+            }
         }
         task.node.fileIndex = (long)task.dataset.get(0).pointID * MsDataPoint.DISK_NUM_BYTES_PER_POINT;
     }
@@ -499,6 +501,7 @@ public class HybridStorage implements StorageFacade
                 }
 
                 LOGGER.log(Level.INFO, "Creating a new mzTree file, version " + USER_VERSION);
+
 
                 // initializing a new database with the current version
                 try (Statement updateAppIdStatement = dbConnection.createStatement()) {

@@ -284,7 +284,7 @@ public final class MzTree
 
             if (trackIntensity) {
                 curPartition.sort(Comparator.comparingDouble((MsDataPoint p) -> p.intensity).reversed());
-                intensityTracker.addRun(curPartition.stream().mapToInt(p -> p.pointID).toArray());
+                intensityTracker.addRun(curPartition.stream().mapToInt(p -> p.pointID).toArray(), this.importState);
             }
 
             LOGGER.log(Level.INFO, "Completed partition " + i);
@@ -393,6 +393,11 @@ public final class MzTree
     {
         LOGGER.log(Level.INFO, "Building MzTree from " + dataset.size() + " points");
 
+        // inform importState of anticipated amount of work
+        int numPointsToSave = dataset.size(); // save points: dataset.length
+        this.importState.setTotalWork(numPointsToSave);
+        this.importState.setImportStatus(ImportStatus.CONVERTING);
+
         this.initDataStorage(STORAGE_INTERFACE_CHOICE, getConvertDestinationPath(sourceFilePath).toString(), dataset.size());
 
         // **************** STEP 1: CONFIGURE TREE ****************
@@ -408,26 +413,31 @@ public final class MzTree
         // init head node
         this.head = new MzTreeNode(this.branchingFactor);
 
-        // inform importState of anticipated amount of work
-        int numPointsToSave = dataset.size(); // save points: dataset.length
-        this.importState.setTotalWork(numPointsToSave);
 
         // **************** STEP 2: BUILD ****************
-
-        this.importState.setImportStatus(ImportStatus.CONVERTING);
 
         // divide the head node, do not sort at start (null), mzML data already sorted by RT
         this.divide(null, dataset, this.head, 0);
 
+
         if (trackIntensity) {
-            this.intensityTracker = new IntensityTracker(dataStorage.getFilePath() + "-intensity", pointCache);
-            this.intensityTracker.setRunCount(1);
-            dataset.sort(Comparator.comparingDouble((MsDataPoint p) -> p.intensity).reversed());
-            this.intensityTracker.addRun(dataset.stream().mapToInt(p -> p.pointID).toArray());
-            this.intensityTracker.finishAdding();
+          this.importState.setTotalWork(dataset.size());
+          this.importState.setWorkDone(0);
+          this.importState.setImportStatus(ImportStatus.INDEXING);
+
+          this.intensityTracker = new IntensityTracker(dataStorage.getFilePath() + "-intensity", pointCache);
+          this.intensityTracker.setRunCount(1);
+          dataset.sort(Comparator.comparingDouble((MsDataPoint p) -> p.intensity).reversed()); // work point 1
+
+          this.intensityTracker.addRun(dataset.stream().mapToInt(p -> p.pointID).toArray(), this.importState); // work point 2
+
+          this.intensityTracker.finishAdding(); // work point 3, ignore for status update
         }
 
         // recursively save node information (only points are saved during construction)
+        this.importState.setTotalWork(numLeafNodes);
+        this.importState.setWorkDone(0);
+        this.importState.setImportStatus(ImportStatus.WRITING);
         this.recursiveNodeSave(this.head, 0);
 
         try {
@@ -614,6 +624,9 @@ public final class MzTree
 
             // save node points to db
             this.dataStorage.saveNodePoints(curNode, this.importState);
+
+            // update status
+            this.importState.setWorkDone(this.importState.getWorkDone()+1);
 
             // recurse on chilren
             for(MzTreeNode childNode : curNode.children)
