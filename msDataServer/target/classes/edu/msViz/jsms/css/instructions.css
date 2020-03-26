@@ -1,0 +1,60 @@
+html {
+    min-height: 100%;
+}
+
+body {
+    background: linear-gradient(#101020, #544C6D);
+    color: white;
+/*    font-size: 120%;*/
+/*    margin: 0;*/
+/*    font: 14px Verdana, sans-serif;*/
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.help-header {
+    font-size: 32px;
+}
+
+table {
+    width: 35%;
+}
+
+.center {
+    text-align: center;
+}
+
+#content {
+    padding: 0 40px;
+    margin: auto;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.column {
+    flex: 1;
+}
+
+.section {
+    margin-top: 1.5em;
+    clear: both;
+}
+
+.section > img, .section .imgbox {
+    float: left;
+    margin: 0 0.75em 0.75em 0;
+}
+
+.section img {
+    width: 48px;
+    height: 48px;
+}
+
+.jump-back {
+	transform: scaleX(-1);
+}

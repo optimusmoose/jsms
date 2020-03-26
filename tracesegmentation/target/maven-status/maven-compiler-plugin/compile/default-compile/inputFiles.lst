@@ -1,0 +1,15 @@
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/TraceSegmentation.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/PointTraceDatabase.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/PointDatabaseConnection.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/NMIScoringMethod.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/Point.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/SegmentationScorer.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/TraceSegmenter.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/SSEScoringMethod.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/PurityScoringMethod.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/TraceParametersProvider.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/DefaultTraceParametersProvider.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/ScoringMethod.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/HttpPointDatabaseConnection.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/ConsoleTraceParametersProvider.java
+/Users/mathew/msViz/tracesegmentation/src/main/java/edu/umt/ms/traceSeg/metrics/NTCDScoringMethod.java

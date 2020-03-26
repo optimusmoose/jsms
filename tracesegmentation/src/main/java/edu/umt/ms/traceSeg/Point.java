@@ -6,16 +6,14 @@ import java.util.*;
  * Simple point data format relevant to segmentation
  */
 public class Point{
-    public int index;
     public int id;
+    public int order;
     public double mz;
     public float rt;
     public double intensity;
     public int traceId;
-    public double distance;
     public int group;
-    public ArrayList<Point> link;
-    public ArrayList<Double> confidence;
+    //public ArrayList<Double> confidence;
 
     // public Point(int id, double mz, float rt, double intensity) {
     //
@@ -25,11 +23,9 @@ public class Point{
     //     this.intensity = intensity;
     // }
     public Point(int id, double mz, float rt, double intensity) {
-        this.link = new ArrayList<Point>();
-        this.confidence = new ArrayList<Double>();
+        //this.confidence = new ArrayList<Double>();
         //this.index = index;
         this.id = id;
-        this.group = id;
         this.mz = mz;
         this.rt = rt;
         this.intensity = intensity;
@@ -45,10 +41,13 @@ public class Point{
     public double getIntensity(){
       return intensity;
     }
-    public double getDistance(){
-      return distance;
-    }
+
     public double getMz(){
       return mz;
+    }
+
+
+    public double getRt(){
+      return rt;
     }
 }

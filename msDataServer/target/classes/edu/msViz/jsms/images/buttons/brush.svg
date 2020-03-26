@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="32.376919"
+   height="32.376919"
+   viewBox="0 0 32.376919 32.376919"
+   id="svg2"
+   version="1.1">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     style="stroke:#f6005d;stroke-opacity:1"
+     id="layer1"
+     transform="translate(-18.650824,-139.01305)">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#f6005d;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 39.401174,144.8538 -5.874828,9.07928 3.508746,2.05866 4.101825,-10.1588 z"
+       id="path4147" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#f6005d;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 33.148043,154.8232 -1.49096,4.62866 1.557719,0.80111 3.315717,-3.5605 z"
+       id="path4149" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#f6005d;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 32.013133,161.27661 c 0,0 -2.635833,-1.72445 -2.714882,2.1363 -0.03583,1.74959 -1.068151,1.86927 -1.068151,1.86927 0,0 6.408903,-1.46871 3.783033,-4.00557 z"
+       id="path4151" />
+    <circle
+       style="fill:none;fill-opacity:1;stroke:#f6005d;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4153"
+       cx="34.839283"
+       cy="155.20151"
+       r="15.688458" />
+  </g>
+</svg>
