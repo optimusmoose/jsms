@@ -43,6 +43,10 @@ public class ImportState extends Observable
     // path to mzTree file (destination)
     private String mzTreeFilePath;
 
+    // workaround for unresolved asynchronus bug
+    private int indexingWorkDone = 0;
+    private float indexingTotalWork = 0;
+
     public ImportStatus getImportStatus() {
         return importStatus;
     }
@@ -101,6 +105,19 @@ public class ImportState extends Observable
         this.mzTreeFilePath = "";
     }
 
+    // workaround for unresolved asynchronus bug
+    public void setIndexingWorkDone(int workDone) {
+        this.indexingWorkDone = workDone;
+        this.setChanged();
+        this.notifyObservers();
+    }
+    public int getIndexingWorkDone() {
+        return this.indexingWorkDone;
+    }
+    public void setIndexingTotalWork(float totalWork){
+      this.indexingTotalWork = totalWork;
+    }
+
     /**
      * Reports the progress of an mzml import / mzTree load
      * @return
@@ -128,12 +145,8 @@ public class ImportState extends Observable
                 }
 
             case INDEXING:
-              if (this.workDone == 0){
-                return "Creating intensity index || sorting points...please be patient";
-              } else {
-                this.percentDone = (int)((this.workDone / this.totalWork) * 100);
-                return "Creating intensity index" + " || " + percentDone + "%";
-              }
+              this.percentDone = (int)((this.indexingWorkDone / this.indexingTotalWork) * 100);
+              return "Creating intensity index" + " || " + percentDone + "%";
 
             case WRITING:
                 this.percentDone = (int)((this.workDone / this.totalWork) * 100);

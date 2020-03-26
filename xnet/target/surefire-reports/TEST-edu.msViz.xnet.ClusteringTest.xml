@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="edu.msViz.xnet.ClusteringTest" time="0.038" errors="0" skipped="0">
+<testsuite tests="3" failures="0" name="edu.msViz.xnet.ClusteringTest" time="0.035" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="11.0.2+9-LTS"/>
@@ -66,5 +66,5 @@
   </properties>
   <testcase classname="edu.msViz.xnet.ClusteringTest" name="connectedSetToClusterTest" time="0.011"/>
   <testcase classname="edu.msViz.xnet.ClusteringTest" name="connectedSetsTest" time="0"/>
-  <testcase classname="edu.msViz.xnet.ClusteringTest" name="needsComparisonTest" time="0.027"/>
+  <testcase classname="edu.msViz.xnet.ClusteringTest" name="needsComparisonTest" time="0.024"/>
 </testsuite>

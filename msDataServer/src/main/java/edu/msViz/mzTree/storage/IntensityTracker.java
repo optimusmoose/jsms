@@ -89,10 +89,10 @@ public class IntensityTracker {
 
     private int writingRun = 0;
     // adds a run of point IDs
-    public synchronized void addRun(int[] pointIds, ImportState importState) throws IOException {
-        importState.setTotalWork(pointIds.length);
-        importState.setWorkDone(0);
-        importState.setImportStatus(ImportStatus.INDEXING);
+    public synchronized void addRun(int[] pointIds, ImportState importState, int partitions) throws IOException {
+        //if (importState.getIndexingWorkDone() == 0){
+          importState.setIndexingTotalWork(pointIds.length * partitions);
+        //}
 
         if (!writing) {
             throw new UnsupportedOperationException();
@@ -101,10 +101,11 @@ public class IntensityTracker {
         long offset = dataFile.getFilePointer();
         runStarts[writingRun] = offset;
 
+        int workDone = importState.getIndexingWorkDone();
         for (int i = 0; i < pointIds.length; i++) {
             dataFile.writeInt(pointIds[i]);
-            if(i % 1000 == 0){
-              importState.setWorkDone(i);
+            if (i % 1000 == 0){
+              importState.setIndexingWorkDone(i + workDone);
             }
         }
 

@@ -252,7 +252,6 @@ public final class MzTree
      */
     private void partitionedLoad(MzmlParser mzmlParser) throws XMLStreamException, DataFormatException, IOException
     {
-
         LOGGER.log(Level.INFO, "Partitioned load w/ " + this.branchingFactor + " partitions");
 
         // signal to the import monitor that tree building has begun
@@ -264,10 +263,12 @@ public final class MzTree
         if (trackIntensity) {
             this.intensityTracker = new IntensityTracker(dataStorage.getFilePath() + "-intensity", pointCache);
             this.intensityTracker.setRunCount(this.branchingFactor);
+            importState.setImportStatus(ImportStatus.INDEXING);
         }
 
         // iterate through each level 1 node, loading partition and
         // constructing separately
+
         for(int i = 0; i < this.branchingFactor; i++)
         {
             // current level 1 node
@@ -284,7 +285,7 @@ public final class MzTree
 
             if (trackIntensity) {
                 curPartition.sort(Comparator.comparingDouble((MsDataPoint p) -> p.intensity).reversed());
-                intensityTracker.addRun(curPartition.stream().mapToInt(p -> p.pointID).toArray(), this.importState);
+                intensityTracker.addRun(curPartition.stream().mapToInt(p -> p.pointID).toArray(), this.importState, this.branchingFactor);
             }
 
             LOGGER.log(Level.INFO, "Completed partition " + i);
@@ -421,15 +422,12 @@ public final class MzTree
 
 
         if (trackIntensity) {
-          this.importState.setTotalWork(dataset.size());
-          this.importState.setWorkDone(0);
-          this.importState.setImportStatus(ImportStatus.INDEXING);
-
+          importState.setImportStatus(ImportStatus.INDEXING);
           this.intensityTracker = new IntensityTracker(dataStorage.getFilePath() + "-intensity", pointCache);
           this.intensityTracker.setRunCount(1);
           dataset.sort(Comparator.comparingDouble((MsDataPoint p) -> p.intensity).reversed()); // work point 1
 
-          this.intensityTracker.addRun(dataset.stream().mapToInt(p -> p.pointID).toArray(), this.importState); // work point 2
+          this.intensityTracker.addRun(dataset.stream().mapToInt(p -> p.pointID).toArray(), this.importState, 1); // work point 2
 
           this.intensityTracker.finishAdding(); // work point 3, ignore for status update
         }
