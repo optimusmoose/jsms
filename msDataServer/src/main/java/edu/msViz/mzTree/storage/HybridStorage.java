@@ -1174,10 +1174,29 @@ public class HybridStorage implements StorageFacade
             }
         }
         private synchronized void clearTraces() throws IOException {
-            for (int i = 0; i < pointCount; i++) {
-                pointFile.seek(i * MsDataPoint.DISK_NUM_BYTES_PER_POINT + TRACE_OFFSET);
-                pointFile.writeInt(0);
+          pointFile.seek(0);
+          int CHUNK_SIZE = 24000;
+          byte[] buffer = new byte[CHUNK_SIZE];
+          int bytesRead = pointFile.read(buffer);
+          while(bytesRead >= CHUNK_SIZE){
+            pointFile.seek(pointFile.getFilePointer()-bytesRead);
+            for(int i = 0; i < (bytesRead/MsDataPoint.DISK_NUM_BYTES_PER_POINT); ++i){
+              buffer[i*24+20] = 0;
+              buffer[i*24+21] = 0;
+              buffer[i*24+22] = 0;
+              buffer[i*24+23] = 0;
             }
+            pointFile.write(buffer);
+            bytesRead = pointFile.read(buffer);
+          }
+          pointFile.seek(pointFile.getFilePointer()-bytesRead);
+          for(int i = 0; i < (bytesRead/MsDataPoint.DISK_NUM_BYTES_PER_POINT); ++i){
+            buffer[i*24+20] = 0;
+            buffer[i*24+21] = 0;
+            buffer[i*24+22] = 0;
+            buffer[i*24+23] = 0;
+          }
+          pointFile.write(buffer);
         }
 
         /* Ensures changes have been saved to the underlying storage medium */
