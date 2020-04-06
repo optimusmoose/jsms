@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
+import edu.msViz.xnet.dataTypes.IsotopeTrace;
+import edu.msViz.xnet.dataTypes.IsotopicEnvelope;
+import edu.msViz.xnet.dataTypes.TracesBundle;
 /**
  * Facilitates the export of ms data selections from an mzTree to a single CSV file
  * @author kyle
@@ -29,7 +32,7 @@ public class CsvExporter implements AutoCloseable{
      * length of partitions
      */
     private static final float PARTITION_LENGTH = 5.0f;
-    
+
     // EPSILON values to cope with floating point accuracy issues
     private static final float EPSILONf = 0.000001f;
 
@@ -37,25 +40,96 @@ public class CsvExporter implements AutoCloseable{
      * csv output writer
      */
     private final CSVWriter outputWriter;
-    
+
     /**
      * Default constructor, creates a csv file at the given path and writes a header
      * @param filepath csv destination path
-     * @throws IOException 
+     * @throws IOException
      */
-    public CsvExporter(String filepath) throws IOException 
+    public CsvExporter(String filepath) throws IOException
     {
         //append csv extension if not already there
         if(!filepath.endsWith(".csv"))
             this.destinationPath = filepath + ".csv";
         else
             this.destinationPath = filepath;
-        
+
         // create csv writer
         outputWriter = new CSVWriter(new FileWriter(this.destinationPath));
-        
+
         // write header
-        outputWriter.writeNext(new String[] {"m/z","RT","intensity","traceID","envelopeID"});
+    }
+
+    /**
+     * Exports multiple ranges from a given mzTree
+     * @param mzTree mzTree containing points to query and export
+     * @return number of points exported
+     * @throws IOException
+     */
+    public int exportTraces(MzTree mzTree) throws IOException
+    {
+      outputWriter.writeNext(new String[] {"traceID","minMZ", "maxMZ", "minRT","maxRT", "peakMZ", "peakRT", "peakIntensity", "fwhm", "intensitySum",""});
+
+      List<IsotopeTrace> traces = mzTree.bundleTraces().synthesize();
+      for(int i = 0; i < traces.size(); ++i){
+        double peakMZ = 0;
+        double peakRT = 0;
+        double maxInt = 0;
+        double maxMZ = 0;
+        double maxRT = 0;
+        double minMZ = Double.POSITIVE_INFINITY;
+        double minRT = Double.POSITIVE_INFINITY;
+
+        for(int j = 0; j < traces.get(i).mzValues.size(); ++j){
+          float mz = traces.get(i).mzValues.get(j).floatValue();
+          float rt = traces.get(i).rtValues.get(j).floatValue();
+          float intensity = traces.get(i).intensityValues.get(j).floatValue();
+
+          if(intensity > maxInt){
+            peakMZ = mz;
+            peakRT = rt;
+            maxInt = intensity;
+          }
+          if(mz < minMZ){
+            minMZ = mz;
+          }
+          if(mz > maxMZ){
+            maxMZ = mz;
+          }
+          if(rt < minRT){
+            minRT = rt;
+          }
+          if(rt > maxRT){
+            maxRT = rt;
+          }
+        }
+
+        outputWriter.writeNext(new String[] {
+          Integer.toString(traces.get(i).traceID),
+          Double.toString(minMZ),
+          Double.toString(maxMZ),
+          Double.toString(minRT),
+          Double.toString(maxRT),
+          Double.toString(peakMZ),
+          Double.toString(peakRT),
+          Double.toString(maxInt),
+          Double.toString(traces.get(i).fwhm()),
+          Double.toString(traces.get(i).intensitySum)
+        },false);
+      }
+      return traces.size();
+    }
+    /**
+     * Exports multiple ranges from a given mzTree
+     * @param mzTree mzTree containing points to query and export
+     * @return number of points exported
+     * @throws IOException
+     */
+    public int exportEnvelopes(MzTree mzTree) throws IOException
+    {
+
+        List<IsotopeTrace> traces = mzTree.bundleTraces().synthesize();
+        return 0;
     }
 
     /**
@@ -64,31 +138,33 @@ public class CsvExporter implements AutoCloseable{
      * @param mzTree mzTree containing points to query and export
      * @param onlySegmented if true, export segmented data only
      * @return number of points exported
-     * @throws IOException 
+     * @throws IOException
      */
     public int export(List<MsDataRange> ranges, MzTree mzTree, boolean onlySegmented) throws IOException
     {
+        outputWriter.writeNext(new String[] {"m/z","RT","intensity","traceID","envelopeID"});
+
         int numPoints = 0;
-        for(MsDataRange range : ranges) 
+        for(MsDataRange range : ranges)
             numPoints += this.export(range, mzTree, onlySegmented);
-       
+
         return numPoints;
     }
-    
+
     /**
      * Exports a single data range from the mzTree to the csv file
      * @param msDataRange range to select from mzTree
      * @param mzTree mzTree containing data points to export
      * @param onlySegmented if true, export segmented data only
      * @return number of data points exported
-     * @throws IOException 
+     * @throws IOException
      */
     public int export(MsDataRange msDataRange, MzTree mzTree, boolean onlySegmented) throws IOException {
         int numPoints = 0;
-        
+
         // create iterator over range's partitions
         Iterator<MsDataRange> partitionIterator = this.partitionedRange(msDataRange);
-        
+
         // iterate range's partitions
         while(partitionIterator.hasNext())
         {
@@ -98,7 +174,7 @@ public class CsvExporter implements AutoCloseable{
             // This could cause a small number of points to be skipped during export. This scenario was considered
             // slightly less bad than duplicating 8000 points when this change was made.
             List<MsDataPoint> partitionResults = mzTree.query(range.mzMin, range.mzMax, range.rtMin, range.rtMax - EPSILONf, 0);
-            
+
             // if collecting only segmented data, apply a segmented filter
             if(onlySegmented) {
                 partitionResults = partitionResults.stream().filter((MsDataPoint point) -> point.traceID != 0 && point.traceID != -1).collect(Collectors.toList());
@@ -111,14 +187,14 @@ public class CsvExporter implements AutoCloseable{
             }
             numPoints += partitionResults.size();
         }
-        
+
         this.outputWriter.flush();
         return numPoints;
     }
-    
+
     /**
      * Creates an iterator over the data range's partitions. Iterates along the m/z axis (fixed RT) if the
-     * range is wide, otherwise iterates along the RT axis (fixed m/z). 
+     * range is wide, otherwise iterates along the RT axis (fixed m/z).
      * @param range ms data range to partition
      * @return Iterator iterator over range's partitions
      */
@@ -126,12 +202,12 @@ public class CsvExporter implements AutoCloseable{
     {
         // isWide == true -> smaller partitions along m/z axis
         final MsDataRange currentPartition;
-        
+
         // partition along rt axis
         currentPartition = new MsDataRange(range.mzMin, range.mzMax, range.rtMin, range.rtMin + PARTITION_LENGTH);
-        
+
         // create iterator for query range's partitions
-        Iterator<MsDataRange> partitionIterator = new Iterator<MsDataRange>() 
+        Iterator<MsDataRange> partitionIterator = new Iterator<MsDataRange>()
         {
             @Override
             public boolean hasNext() {
@@ -139,11 +215,11 @@ public class CsvExporter implements AutoCloseable{
             }
 
             @Override
-            public MsDataRange next() 
-            {        
-                
+            public MsDataRange next()
+            {
+
                 MsDataRange returnPartition = new MsDataRange(currentPartition);
-                
+
                 // advance partition for next (will exceed range if final partition, causes hasNext to fail)
                 currentPartition.rtMin += PARTITION_LENGTH;
                 currentPartition.rtMax += PARTITION_LENGTH;
@@ -152,12 +228,12 @@ public class CsvExporter implements AutoCloseable{
                 if (currentPartition.rtMax > range.rtMax) {
                     currentPartition.rtMax = range.rtMax;
                 }
-                
+
                 return returnPartition;
             }
-            
+
         };
-        
+
         return partitionIterator;
     }
 
@@ -165,7 +241,7 @@ public class CsvExporter implements AutoCloseable{
     {
         return this.destinationPath;
     }
-    
+
     @Override
     public void close() throws Exception {
         this.outputWriter.flush();

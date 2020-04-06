@@ -54,6 +54,7 @@ public class TraceSegmenter {
       List<Point> preFilter = connection.getAllPoints(0, 0, 0, 0, 0);
 
       calcStats(preFilter);
+
       System.out.println("Size before Filter: " + preFilter.size());
       intPoints = filter(preFilter);
       System.out.println("Size after Fitler: " + intPoints.size());
@@ -122,8 +123,6 @@ public class TraceSegmenter {
       List<Point> intPoints = new ArrayList<Point>();
 
       for(int i = 0; i < preFilter.size(); i++){
-        System.out.println("Average: " + averageInt);
-        System.out.println("Stddev: " + stddev);
         if(preFilter.get(i).intensity > (averageInt + (SMALL_STD_DEV*stddev))){
           intPoints.add(preFilter.get(i));
         }
@@ -207,17 +206,12 @@ public class TraceSegmenter {
       if((a/b) < .30){
         MZ_WIDTH = (sumMz/sumCounter);
         pointLimit = 3;
-        BIG_STD_DEV = -1;
-        SMALL_STD_DEV = -1;
         System.out.println("Detected that File is Centroid");
       }else{
         MZ_WIDTH = 10*(sumMz/sumCounter);
-        pointLimit = 15;
-        BIG_STD_DEV = .5;
-        SMALL_STD_DEV = 0;
+        pointLimit = 10;
         System.out.println("Detected that File is Profile");
       }
-      System.out.println("The average MZ seperation is " + MZ_WIDTH);
       if (MZ_WIDTH > .01) MZ_WIDTH = .01;
       System.out.println("BIG_STD_DEV: " + BIG_STD_DEV + " SMALL_STD_DEV: " + SMALL_STD_DEV);
       System.out.println("The average MZ seperation is " + MZ_WIDTH);
@@ -262,15 +256,11 @@ public class TraceSegmenter {
           //System.out.print("\033[H\033[2J");
           System.out.println("Percentage Linked: " + ((double)i/intPoints.size())*100);
         }
-
-        int x = (int)(Math.floor((intPoints.get(i).mz-minMz)/(maxMz-minMz)*(GRIDX-1)));
-        int y = (int)(Math.floor((intPoints.get(i).rt-minRt)/(maxRt-minRt)*(GRIDY-1)));
-
-        if(intPoints.get(i).intensity > (averageInt + (BIG_STD_DEV*stddev))) {
+        if(intPoints.get(i).intensity > (2*averageInt + (BIG_STD_DEV*stddev))) {
 
           walk(intPoints.get(i).order, intPoints.get(i).mz);
           for(int j = windowPts.size()-1; j >=0; j--){
-            if(Math.abs(windowPts.get(j).rt-intPoints.get(i).rt) < 10 * RT_WIDTH && windowPts.get(j).intensity * .8 < intPoints.get(i).intensity) {
+            if(Math.abs(windowPts.get(j).rt-intPoints.get(i).rt) < 4 * RT_WIDTH && windowPts.get(j).intensity * .9 < intPoints.get(i).intensity) {
               windowPts.get(j).group = intPoints.get(i).group;
             }
           }

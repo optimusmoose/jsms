@@ -220,6 +220,22 @@ public class IsotopeTrace {
         return this.arc.entrySet().stream().max(Comparator.comparing(d -> d.getValue())).get().getKey();
     }
 
+    public double fwhm(){
+      double intCutoff = getMaxIntensity()/2.0;
+      double maxMZ = 0;
+      double minMZ = Double.POSITIVE_INFINITY;
+      for(int i = 0; i < this.intensityValues.size(); ++i){
+        if(this.intensityValues.get(i) > intCutoff){
+          if(this.mzValues.get(i) < minMZ){
+            minMZ = this.mzValues.get(i) ;
+          }
+          if(this.mzValues.get(i)  > maxMZ){
+            maxMZ = this.mzValues.get(i) ;
+          }
+        }
+      }
+      return (maxMZ-minMZ);
+    }
     /**
      * Structure for containing a string of data points corresponding
      * to a scan within a trace
