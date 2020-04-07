@@ -24,19 +24,19 @@ class ClusterPanel extends JPanel {
     private final JRadioButton cluster;
     private final JRadioButton train;
     private final JCheckBox useDefault;
-    
+
     // model descriptions
     private static final String BAYESIAN_DESCRIPTION = "Uses prior knowledge to infer isotopic envelopes.";
     private static final String FREQUENTIST_DESCRIPTION = "Uses measured probabilites to infer isotopic envelopes.";
     private static final String HYBRID_DESCRIPTION = "Uses prior knowlege and measured probabilities to infer isotopic envelopes.";
-    
-    private static final String DEFAULT_PROBS_TOOLTIP = 
+
+    private static final String DEFAULT_PROBS_TOOLTIP =
             "Uses default measured probabilites, measured from UPS2 MS dataset.";
-    
-    private static final String CLUSTER_TOOLTIP = 
+
+    private static final String CLUSTER_TOOLTIP =
             "Performs trace clustering on all traces in current dataset.";
-    
-    private static final String TRAIN_TOOLTIP = 
+
+    private static final String TRAIN_TOOLTIP =
             "Performs probability training on current dataset. Results can be stored in a new file or added to existing probability file.";
 
     public ClusterPanel(StartFrame frame) {
@@ -63,7 +63,7 @@ class ClusterPanel extends JPanel {
         models.setToolTipText(BAYESIAN_DESCRIPTION);
         c.gridx = 1;
         this.add(models, c);
-        
+
         // ************** frequentist options ****************
         {
             frequentistOptionsPanel = new JPanel();
@@ -182,7 +182,7 @@ class ClusterPanel extends JPanel {
         else
             useDefault.setEnabled(false);
     }
-    
+
     private void modelChanged(ActionEvent e) {
         String action = (String) models.getSelectedItem();
         switch (action) {
@@ -208,7 +208,7 @@ class ClusterPanel extends JPanel {
             SwingUtilities.invokeLater(() -> doTraceButton.setText("Stop Trace"));
             traceThread = new Thread(() -> {
                 MzTreePointDatabaseConnection connection = new MzTreePointDatabaseConnection(mzTree);
-                TraceSegmenter segmenter = new TraceSegmenter(connection, new DefaultTraceParametersProvider());
+                TraceSegmenter segmenter = new TraceSegmenter(connection);
                 try {
                     LOGGER.log(Level.INFO, "Starting trace segmentation");
                     segmenter.run();
@@ -231,4 +231,3 @@ class ClusterPanel extends JPanel {
         }
     }
 }
-

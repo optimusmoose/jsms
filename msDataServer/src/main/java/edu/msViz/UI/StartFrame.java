@@ -73,7 +73,7 @@ public class StartFrame extends JFrame {
 
         // add main content area and file buttons
         JPanel mainPanel = new JPanel();
-        mainPanel.setPreferredSize(new Dimension(450, 350));
+        mainPanel.setPreferredSize(new Dimension(550, 350));
         mainPanel.setLayout(new BorderLayout());
 
         filePanel = new FilePanel(this);

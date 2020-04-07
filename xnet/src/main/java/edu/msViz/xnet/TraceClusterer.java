@@ -7,7 +7,7 @@ package edu.msViz.xnet;
 
 import edu.msViz.xnet.dataTypes.TraceCluster;
 import edu.msViz.xnet.dataTypes.*;
-import edu.msViz.xnet.probability.FrequentistProbability;
+import edu.msViz.xnet.probability.BayesianProbability;
 import edu.msViz.xnet.probability.ProbabilityAggregator;
 import java.io.IOException;
 import java.util.ArrayList;

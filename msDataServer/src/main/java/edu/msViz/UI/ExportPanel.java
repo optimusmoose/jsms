@@ -101,7 +101,8 @@ class ExportPanel extends JPanel {
         this.segmentedOnly.setToolTipText("Export only data that have been segmented");
         exportControlPanel.add(this.segmentedOnly);
         exportControlPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        // segmented only checkbox
+
+        // export traces button
         JButton exportTraceButton = new JButton("Traces");
         exportTraceButton.setMnemonic('T');
         exportTraceButton.addActionListener(e -> this.exportTraceClicked(e));
@@ -109,13 +110,13 @@ class ExportPanel extends JPanel {
         exportControlPanel.add(exportTraceButton);
         exportControlPanel.add(Box.createRigidArea(new Dimension(5,0)));
 
-        // // segmented only checkbox
-        // JButton exportEnvelopeButton = new JButton("Envelopes");
-        // exportEnvelopeButton.setMnemonic('E');
-        // exportEnvelopeButton.addActionListener(e -> this.exportEnvelopeClicked(e));
-        // exportEnvelopeButton.setToolTipText("Export all Envelopes with stats to CSV");
-        // exportControlPanel.add(exportEnvelopeButton);
-        // exportControlPanel.add(Box.createRigidArea(new Dimension(5,0)));
+        // export envelopes button
+        JButton exportEnvelopeButton = new JButton("Envelopes");
+        exportEnvelopeButton.setMnemonic('E');
+        exportEnvelopeButton.addActionListener(e -> this.exportEnvelopeClicked(e));
+        exportEnvelopeButton.setToolTipText("Export all Envelopes with stats to CSV");
+        exportControlPanel.add(exportEnvelopeButton);
+        exportControlPanel.add(Box.createRigidArea(new Dimension(5,0)));
 
         return exportControlPanel;
 
@@ -249,11 +250,11 @@ class ExportPanel extends JPanel {
 
     }
 
-    // private void exportEnvelopeClicked(ActionEvent e)
-    // {
-    //   this.performEnvelopeExport();
-    //
-    // }
+    private void exportEnvelopeClicked(ActionEvent e)
+    {
+      this.performEnvelopeExport();
+    
+    }
 
     /**
      * Event (click) listener for export button. Exports all specified data ranges from MzTree file,
@@ -318,32 +319,32 @@ class ExportPanel extends JPanel {
         }
       }
     }
-    //
-    // private void performEnvelopeExport()
-    // {
-    //   JFileChooser outputFileChooser = new JFileChooser();
-    //   outputFileChooser.setDialogTitle("Export");
-    //   outputFileChooser.setFileFilter(new FileNameExtensionFilter(".csv", "csv"));
-    //   int outputFileResult = outputFileChooser.showSaveDialog(this.frame);
-    //   if (outputFileResult == JFileChooser.APPROVE_OPTION)
-    //   {
-    //     String filepath = outputFileChooser.getSelectedFile().getPath();
-    //     try (CsvExporter exporter = new CsvExporter(filepath))
-    //     {
-    //         // perform export
-    //         int numExported = exporter.exportEnvelopes(this.frame.mzTree);
-    //
-    //         // report results
-    //         LOGGER.log(Level.INFO, "Exported {0} data points to {1}", new Object[] {numExported, exporter.getDestinationPath()});
-    //         JOptionPane.showMessageDialog(this.frame, "Finished CSV export to\n " + exporter.getDestinationPath(), "Export Complete", JOptionPane.INFORMATION_MESSAGE);
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         LOGGER.log(Level.SEVERE, "Error when exporting CSV file", ex);
-    //         JOptionPane.showMessageDialog(this.frame, "Could not export to CSV file: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
-    //     }
-    //   }
-    // }
+    
+    private void performEnvelopeExport()
+    {
+      JFileChooser outputFileChooser = new JFileChooser();
+      outputFileChooser.setDialogTitle("Export");
+      outputFileChooser.setFileFilter(new FileNameExtensionFilter(".csv", "csv"));
+      int outputFileResult = outputFileChooser.showSaveDialog(this.frame);
+      if (outputFileResult == JFileChooser.APPROVE_OPTION)
+      {
+        String filepath = outputFileChooser.getSelectedFile().getPath();
+        try (CsvExporter exporter = new CsvExporter(filepath))
+        {
+            // perform export
+            int numExported = exporter.exportEnvelopes(this.frame.mzTree);
+    
+            // report results
+            LOGGER.log(Level.INFO, "Exported {0} envelopes to {1}", new Object[] {numExported, exporter.getDestinationPath()});
+            JOptionPane.showMessageDialog(this.frame, "Finished CSV export to\n " + exporter.getDestinationPath(), "Export Complete", JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (Exception ex)
+        {
+            LOGGER.log(Level.SEVERE, "Error when exporting CSV file", ex);
+            JOptionPane.showMessageDialog(this.frame, "Could not export to CSV file: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    }
 
     private void performExport(List<MsDataRange> exportRanges, boolean onlySegmented)
     {

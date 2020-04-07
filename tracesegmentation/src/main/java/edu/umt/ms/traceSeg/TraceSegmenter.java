@@ -42,7 +42,7 @@ public class TraceSegmenter {
     double minMz = Double.POSITIVE_INFINITY;;
     double minRt = Double.POSITIVE_INFINITY;;
 
-    public TraceSegmenter(PointDatabaseConnection connection, TraceParametersProvider parametersProvider) {
+    public TraceSegmenter(PointDatabaseConnection connection) {
         this.connection = connection;
     }
 
@@ -260,7 +260,7 @@ public class TraceSegmenter {
 
           walk(intPoints.get(i).order, intPoints.get(i).mz);
           for(int j = windowPts.size()-1; j >=0; j--){
-            if(Math.abs(windowPts.get(j).rt-intPoints.get(i).rt) < 4 * RT_WIDTH && windowPts.get(j).intensity * .9 < intPoints.get(i).intensity) {
+            if(Math.abs(windowPts.get(j).rt-intPoints.get(i).rt) < 10 * RT_WIDTH && windowPts.get(j).intensity * .8 < intPoints.get(i).intensity) {
               windowPts.get(j).group = intPoints.get(i).group;
             }
           }

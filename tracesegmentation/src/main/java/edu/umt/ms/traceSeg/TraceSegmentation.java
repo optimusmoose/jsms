@@ -12,7 +12,7 @@ class TraceSegmentation {
         TraceSegmenter segmenter;
 
         try {
-            segmenter = new TraceSegmenter(new HttpPointDatabaseConnection(new URI("http://localhost:4567/")), new ConsoleTraceParametersProvider());
+            segmenter = new TraceSegmenter(new HttpPointDatabaseConnection(new URI("http://localhost:4567/")));
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;

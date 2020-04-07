@@ -16,7 +16,10 @@ import java.util.stream.Collectors;
 
 import edu.msViz.xnet.dataTypes.IsotopeTrace;
 import edu.msViz.xnet.dataTypes.IsotopicEnvelope;
-import edu.msViz.xnet.dataTypes.TracesBundle;
+import edu.msViz.xnet.TraceClusterer;
+import edu.msViz.xnet.probability.ProbabilityAggregator;
+
+
 /**
  * Facilitates the export of ms data selections from an mzTree to a single CSV file
  * @author kyle
@@ -128,8 +131,54 @@ public class CsvExporter implements AutoCloseable{
     public int exportEnvelopes(MzTree mzTree) throws IOException
     {
 
-        List<IsotopeTrace> traces = mzTree.bundleTraces().synthesize();
-        return 0;
+      List<IsotopeTrace> traces = mzTree.bundleTraces().synthesize();
+
+      String envelopeOutput = "monoIsotopicMz,monoIsotopicRT,chargeState,minMZ,maxMZ,minRT,maxRT,totalAbundance,relativeIntensities\n";
+
+      List<IsotopicEnvelope> Envelopes = new TraceClusterer().clusterTraces(traces, ProbabilityAggregator.PROB_MODEL.BAYESIAN, null);
+  
+      for(int i = 0; i < Envelopes.size(); i++) {
+        double intensitySum = 0;
+        double maxMZ = 0;
+        double maxRT = 0;
+        double minMZ = Double.POSITIVE_INFINITY;
+        double minRT = Double.POSITIVE_INFINITY;
+        for (int j = 0; j < Envelopes.get(i).traces.length; j++){
+          for(int k = 0; k < Envelopes.get(i).traces[j].mzValues.size(); k++){
+            float mz = Envelopes.get(i).traces[j].mzValues.get(k).floatValue();
+            float rt = Envelopes.get(i).traces[j].rtValues.get(k).floatValue();
+            float intensity = Envelopes.get(i).traces[j].intensityValues.get(k).floatValue();
+            int traceID = Envelopes.get(i).traces[j].traceID;
+            int envelopeID = Envelopes.get(i).envelopeID;
+            if(mz < minMZ){
+              minMZ = mz;
+            }
+            if(mz > maxMZ){
+              maxMZ = mz;
+            }
+            if(rt < minRT){
+              minRT = rt;
+            }
+            if(rt > maxRT){
+              maxRT = rt;
+            }
+          }
+          intensitySum+= Envelopes.get(i).traces[j].intensitySum;
+        }
+        if(Envelopes.get(i).chargeState > 0){
+          envelopeOutput += Envelopes.get(i).monoisotopicMZ + "," + Envelopes.get(i).monoisotopicRT + "," + Envelopes.get(i).chargeState + "," + minMZ + "," + maxMZ + "," + minRT + "," + maxRT + "," +intensitySum + ",";
+          for(int l = 0; l < Envelopes.get(i).relativeIntensities.length; l++){
+            if(l == Envelopes.get(i).relativeIntensities.length-1){
+              envelopeOutput += Envelopes.get(i).relativeIntensities[l];
+            }else{
+              envelopeOutput += Envelopes.get(i).relativeIntensities[l] + "-";
+            }
+          }
+          envelopeOutput += "\n";
+        }
+      }
+      outputWriter.writeNext(new String[] {envelopeOutput});
+      return Envelopes.size();
     }
 
     /**

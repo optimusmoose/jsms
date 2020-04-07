@@ -4,7 +4,6 @@ import edu.msViz.msHttpApi.MsDataServer;
 import edu.msViz.msHttpApi.MzTreePointDatabaseConnection;
 import edu.msViz.mzTree.MzTree;
 import edu.msViz.mzTree.summarization.SummarizationStrategyFactory;
-import edu.umt.ms.traceSeg.ConsoleTraceParametersProvider;
 import edu.umt.ms.traceSeg.TraceSegmenter;
 
 import java.util.logging.Level;
@@ -32,7 +31,7 @@ public class Segmentation {
         MzTreePointDatabaseConnection connection = new MzTreePointDatabaseConnection(mzTree);
         LOGGER.log(Level.INFO, "Beginning trace segmentation");
         long start = System.currentTimeMillis();
-        TraceSegmenter segmenter = new TraceSegmenter(connection, new ConsoleTraceParametersProvider());
+        TraceSegmenter segmenter = new TraceSegmenter(connection);
         segmenter.run();
         LOGGER.log(Level.INFO, "Trace segmentation finished in " + (System.currentTimeMillis() - start) + "ms");
         mzTree.pointCache.clear();
