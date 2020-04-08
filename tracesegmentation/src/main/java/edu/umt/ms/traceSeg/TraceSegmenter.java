@@ -18,8 +18,6 @@ public class TraceSegmenter {
     private double BIG_STD_DEV = 0;
     private double SMALL_STD_DEV = 0;
 
-    private int pointLimit = 0;
-
     int GRIDX = 1;
     int GRIDY = 1;
 
