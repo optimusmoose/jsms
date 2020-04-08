@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="8" failures="0" name="edu.msViz.xnet.RealWorldTest" time="0.582" errors="0" skipped="0">
+<testsuite tests="8" failures="0" name="edu.msViz.xnet.RealWorldTest" time="0.539" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="13.0.2+8"/>
@@ -57,12 +57,12 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
   </properties>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="twoCollidingEnvsFourResultEnvs" time="0.148"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="twoEnvelopesInconsistentTest" time="0.098"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="misalignedPeaksTest" time="0.068"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="fiveTraceFiveEnvelopesTest" time="0.08"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="interleavedSlightOverlapTest" time="0.061"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="nonDescendingTest" time="0.042"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="singleSplitTest" time="0.042"/>
-  <testcase classname="edu.msViz.xnet.RealWorldTest" name="unassignedTraceTest" time="0.043"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="twoCollidingEnvsFourResultEnvs" time="0.145"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="twoEnvelopesInconsistentTest" time="0.099"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="misalignedPeaksTest" time="0.05"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="fiveTraceFiveEnvelopesTest" time="0.062"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="interleavedSlightOverlapTest" time="0.052"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="nonDescendingTest" time="0.045"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="singleSplitTest" time="0.044"/>
+  <testcase classname="edu.msViz.xnet.RealWorldTest" name="unassignedTraceTest" time="0.042"/>
 </testsuite>

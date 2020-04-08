@@ -18,6 +18,8 @@ public class TraceSegmenter {
     private double BIG_STD_DEV = 0;
     private double SMALL_STD_DEV = 0;
 
+    int pointLimit = 10;
+  
     int GRIDX = 1;
     int GRIDY = 1;
 
@@ -48,6 +50,7 @@ public class TraceSegmenter {
 
       connection.deleteTraces();
 
+      
       //TO get all points in file, pass in 0s. Otherwise pass in window.
       List<Point> preFilter = connection.getAllPoints(0, 0, 0, 0, 0);
 
@@ -221,10 +224,10 @@ public class TraceSegmenter {
       RIGHT = id;
 
       windowPts.clear();
-      while(LEFT > 10 && mzPoints.get(LEFT).mz > mz - 2*MZ_WIDTH){
+      while(LEFT > 10 && mzPoints.get(LEFT).mz > mz - 4*MZ_WIDTH){
         LEFT-=10;
       }
-      while(RIGHT < mzPoints.size()-11 && mzPoints.get(RIGHT).mz < mz + 2*MZ_WIDTH){
+      while(RIGHT < mzPoints.size()-11 && mzPoints.get(RIGHT).mz < mz + 4*MZ_WIDTH){
         RIGHT+=10;
       }
 
@@ -255,7 +258,7 @@ public class TraceSegmenter {
           walk(intPoints.get(i).order, intPoints.get(i).mz);
           for(int j = windowPts.size()-1; j >=0; j--){
             double confidence = calcConfidence(windowPts.get(j),intPoints.get(i));
-            if(Math.abs(windowPts.get(j).rt-intPoints.get(i).rt) < 10 * RT_WIDTH && windowPts.get(j).intensity * .8 < intPoints.get(i).intensity){
+            if(Math.abs(windowPts.get(j).rt-intPoints.get(i).rt) < 10 * RT_WIDTH && windowPts.get(j).intensity * .9 < intPoints.get(i).intensity){
               if (confidence < windowPts.get(j).confidence){
                 windowPts.get(j).group = intPoints.get(i).group;
                 windowPts.get(j).confidence = confidence; 
@@ -281,7 +284,7 @@ public class TraceSegmenter {
       Set<Integer> keys = traceMap.keySet();
       int nextTraceId = 0;
       for(Integer key: keys){
-        if(traceMap.get(key).size() > 5){
+        if(traceMap.get(key).size() > pointLimit){
           for(int i = 0; i < traceMap.get(key).size(); i++){
             connection.writePoint(nextTraceId, traceMap.get(key).get(i));
           }

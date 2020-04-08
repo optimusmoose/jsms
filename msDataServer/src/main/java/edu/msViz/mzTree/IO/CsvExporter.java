@@ -133,11 +133,16 @@ public class CsvExporter implements AutoCloseable{
 
       List<IsotopeTrace> traces = mzTree.bundleTraces().synthesize();
 
-      String envelopeOutput = "monoIsotopicMz,monoIsotopicRT,chargeState,minMZ,maxMZ,minRT,maxRT,totalAbundance,relativeIntensities\n";
+      //String envelopeOutput = "monoIsotopicMz,monoIsotopicRT,chargeState,minMZ,maxMZ,minRT,maxRT,totalAbundance,relativeIntensities\n";
+
+     
+
+      outputWriter.writeNext(new String[] { "monoIsotopicMz","monoIsotopicRT","chargeState","minMZ","maxMZ","minRT","maxRT","totalAbundance","relativeIntensities"});
 
       List<IsotopicEnvelope> Envelopes = new TraceClusterer().clusterTraces(traces, ProbabilityAggregator.PROB_MODEL.BAYESIAN, null);
   
       for(int i = 0; i < Envelopes.size(); i++) {
+        String envelopeOutput = "";
         double intensitySum = 0;
         double maxMZ = 0;
         double maxRT = 0;
@@ -165,19 +170,29 @@ public class CsvExporter implements AutoCloseable{
           }
           intensitySum+= Envelopes.get(i).traces[j].intensitySum;
         }
+        String relativeIntensities = "";
         if(Envelopes.get(i).chargeState > 0){
-          envelopeOutput += Envelopes.get(i).monoisotopicMZ + "," + Envelopes.get(i).monoisotopicRT + "," + Envelopes.get(i).chargeState + "," + minMZ + "," + maxMZ + "," + minRT + "," + maxRT + "," +intensitySum + ",";
           for(int l = 0; l < Envelopes.get(i).relativeIntensities.length; l++){
             if(l == Envelopes.get(i).relativeIntensities.length-1){
-              envelopeOutput += Envelopes.get(i).relativeIntensities[l];
+              relativeIntensities += Envelopes.get(i).relativeIntensities[l];
             }else{
-              envelopeOutput += Envelopes.get(i).relativeIntensities[l] + "-";
+              relativeIntensities += Envelopes.get(i).relativeIntensities[l] + "-";
             }
           }
-          envelopeOutput += "\n";
         }
+        //envelopeOutput += Envelopes.get(i).monoisotopicMZ + "," + Envelopes.get(i).monoisotopicRT + "," + Envelopes.get(i).chargeState + "," + minMZ + "," + maxMZ + "," + minRT + "," + maxRT + "," +intensitySum + ",";
+        outputWriter.writeNext(new String[] {
+          Double.toString(Envelopes.get(i).monoisotopicMZ),
+          Double.toString(Envelopes.get(i).monoisotopicRT),
+          Double.toString(Envelopes.get(i).chargeState),
+          Double.toString(minMZ),
+          Double.toString(maxMZ),
+          Double.toString(minMZ),
+          Double.toString(maxRT),
+          Double.toString(intensitySum),
+          relativeIntensities
+        });
       }
-      outputWriter.writeNext(new String[] {envelopeOutput});
       return Envelopes.size();
     }
 
@@ -280,9 +295,7 @@ public class CsvExporter implements AutoCloseable{
 
                 return returnPartition;
             }
-
         };
-
         return partitionIterator;
     }
 
