@@ -235,33 +235,33 @@ public class TraceSegmenter {
       }
     }
 
-    public int findRoot(Point p){
-      while (p.order != p.group){
-        p = mzPoints.get(p.group);
-      }
-      return p.order;
+
+    public double getDistance(Point p1, Point p2){
+      return Math.sqrt(Math.pow(p1.mz - p2.mz,2)+Math.pow(p1.rt - p2.rt,2));
     }
 
-    public void pointUnion(Point p1, Point p2){
-      if(p1.group < p2.group){
-        p2.group = p1.group;
-      }else{
-        p1.group = p2.group;
-      }
+    public double calcConfidence(Point p1, Point p2){
+      double confidence = 0;
+      confidence += Math.log10(Math.abs(p1.intensity - p2.intensity));
+      confidence += Math.log10(Math.abs(getDistance(p1,p2)));
+      return confidence;
     }
-
     public void linkPoints()throws Exception {
       for(int i = intPoints.size()-1; i >= 0; i--){
         if(i % 100000 == 0){
           //System.out.print("\033[H\033[2J");
           System.out.println("Percentage Linked: " + ((double)i/intPoints.size())*100);
+          
         }
         if(intPoints.get(i).intensity > (2*averageInt + (BIG_STD_DEV*stddev))) {
-
           walk(intPoints.get(i).order, intPoints.get(i).mz);
           for(int j = windowPts.size()-1; j >=0; j--){
-            if(Math.abs(windowPts.get(j).rt-intPoints.get(i).rt) < 10 * RT_WIDTH && windowPts.get(j).intensity * .8 < intPoints.get(i).intensity) {
-              windowPts.get(j).group = intPoints.get(i).group;
+            double confidence = calcConfidence(windowPts.get(j),intPoints.get(i));
+            if(Math.abs(windowPts.get(j).rt-intPoints.get(i).rt) < 10 * RT_WIDTH && windowPts.get(j).intensity * .8 < intPoints.get(i).intensity){
+              if (confidence < windowPts.get(j).confidence){
+                windowPts.get(j).group = intPoints.get(i).group;
+                windowPts.get(j).confidence = confidence; 
+              }
             }
           }
         }

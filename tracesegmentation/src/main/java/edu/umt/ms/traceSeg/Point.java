@@ -11,20 +11,11 @@ public class Point{
     public double mz;
     public float rt;
     public double intensity;
-    public int traceId;
     public int group;
-    //public ArrayList<Double> confidence;
+    public double confidence;
 
-    // public Point(int id, double mz, float rt, double intensity) {
-    //
-    //     this.id = id;
-    //     this.mz = mz;
-    //     this.rt = rt;
-    //     this.intensity = intensity;
-    // }
     public Point(int id, double mz, float rt, double intensity) {
-        //this.confidence = new ArrayList<Double>();
-        //this.index = index;
+        this.confidence = Double.POSITIVE_INFINITY;
         this.id = id;
         this.mz = mz;
         this.rt = rt;
