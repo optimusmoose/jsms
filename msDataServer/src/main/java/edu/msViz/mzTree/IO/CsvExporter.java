@@ -187,7 +187,7 @@ public class CsvExporter implements AutoCloseable{
           Double.toString(Envelopes.get(i).chargeState),
           Double.toString(minMZ),
           Double.toString(maxMZ),
-          Double.toString(minMZ),
+          Double.toString(minRT),
           Double.toString(maxRT),
           Double.toString(intensitySum),
           relativeIntensities
