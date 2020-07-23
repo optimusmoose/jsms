@@ -138,7 +138,7 @@ public class CsvExporter implements AutoCloseable{
 
      
 
-      outputWriter.writeNext(new String[] { "envelopeID, monoIsotopicMz","monoIsotopicRT","chargeState","minMZ","maxMZ","minRT","maxRT","totalAbundance","relativeIntensities"});
+      outputWriter.writeNext(new String[] { "envelopeID", "monoIsotopicMz","monoIsotopicRT","chargeState","minMZ","maxMZ","minRT","maxRT","totalAbundance","relativeIntensities"});
 
       List<IsotopicEnvelope> Envelopes = new TraceClusterer().clusterTraces(traces, ProbabilityAggregator.PROB_MODEL.BAYESIAN, null);
   
