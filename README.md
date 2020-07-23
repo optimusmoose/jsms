@@ -56,8 +56,31 @@ If you are publishing any work related to the execution of this software, *pleas
   This can be done by passing the `-Xmx` flag. For example, add `-Xmx8g` to give
   the application a maximum 8 gigabytes of memory.
 
-#### See *instruction.html* for instructions on iteracting with JS-MS
+#### See *instruction.html* for instructions on interacting with JS-MS
 *instruction.html* is accessible by clicking the **?** button in the top-right of the graph view.
+
+#### Creating ground truth data
+- *Isotopic Trace Mode.* When a user enters isotopic trace mode, they are given the option to create a new trace or select an existing trace to edit. Each time a new trace is created, the trace is given an ID and color. Users select the points belonging to the trace by clicking and dragging a rectangle over the desired points to highlight them in the given color. The same procedure is used to edit an existing trace, only the control key is depressed while drawing the rectangle.
+
+- *Isotopic Envelope Mode.* After the user has identified isotopic traces, they can group them together with isotopic envelope mode. Similar to isotopic trace mode, this mode creates a new envelope ID and color for each new envelope created. The user then selects all isotopic traces that belong to the same group. Isotopic traces can be grouped by clicking each trace or simply by dragging a line across all traces in an envelope. To help the user distinguish which isotopic traces belong together, the ruler tool shows m/z intervals corresponding to specific charge states. The ruler will appear wherever the mouse is placed when users select a number from the keypad. The ruler moves with the graph as the user zooms or pans, and will remain present until the user hits the tilde key. The m/z distance displayed is 1/z, where z is the number selected and the charge state of a hypothetical compound at the given mass. Users can also toggle between 2-D and 3-D mode while in either isotopic trace or isotopic envelope mode to ensure peak alignment. Isotopic traces can be added to existing isotopic envelopes at any time following this procedure and they can be removed in the same way while depressing the control key.
+
+- *Mark as Noise Button.* When all distinguishable points in the current view have been annotated the user can mark all other points in the view as noise. When a point is marked as noise it will be colored gray in the view and given an ID of -1 when exported to .csv. To prevent users from marking unseen points as noise, the graph view must be displaying a number of points below the point threshold to ensure that the user is viewing every point within the (m/z, RT) coordinates and none are hidden.
+
+#### Exporting ground truth data
+- In the server window (where you start the server and launch the browser), you can export segmented data to a .csv that will feature all points in the file in the form: m/z, RT, intensity, isotopic trace ID, isotopic envelope ID. Isotopic IDs are unique, meaning they are not dependent on the isotopic envelope ID. A trace/envelope ID of zero means that point has not yet been assigned to a trace/envelope, and an ID of -1 means it has been assigned to noise using the "mark as noise" button.
+
+#### Creating and editing bookmarks
+- Bookmarks can be created in the program by first displaying the bookmarks bar by clicking on the bookmarks button in the lefthand bar. Next, you enter a label, m/z value, and RT value in the respective fields on the list. Existing entries can be edited by clicking the edit button beside the entry, or deleted by clicking the delete button beside the entry.
+
+- To create a bookmark list outside of JS-MS, create a .tsv file that contains, for each line/bookmark, a text label, a float value for m/z, and a float value for RT. In JS-MS, you can open this bookmark list using the open button in the bookmark list. You can also export a list using the export button in the bookmarks list view.
+
+- NOTE: Re-opening a bookmark list in JS-MS will overwrite any changes you have made to the list. Exporting a bookmark list will export the current version of the list as displayed. This is important to know if you edit or remove entries to the bookmark list while in JS-MS.
+
+#### Inspecting data using bookmarks
+- In the righthand panel, locate the "Jump To" radio button and ensure "Next Bookmark" is selected. Create or load a bookmark list as described above. Click on the bookmarks button in the lefthand bar to display the bookmark list. You can now navigate to a specific bookmark by clicking on the name of the bookmark, or the next bookmark in visited order by clicking the jump button (right arrow) on the lefthand bar.
+
+#### Inspecting data using "Jump to Window"
+- In the righthand panel, locate the "Jump to Window" area. Enter the m/z and RT window you would like to graph, and click the check button. The graph will respond by plotting the described area.
 
 ## Build (optional)
 - Run `mvn package` from within the project root directory
