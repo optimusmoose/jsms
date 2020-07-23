@@ -71,7 +71,7 @@ public class CsvExporter implements AutoCloseable{
      */
     public int exportTraces(MzTree mzTree) throws IOException
     {
-      outputWriter.writeNext(new String[] {"traceID","minMZ", "maxMZ", "minRT","maxRT", "peakMZ", "peakRT", "peakIntensity", "fwhm", "intensitySum",""});
+      outputWriter.writeNext(new String[] {"traceID","envelopeID", "minMZ", "maxMZ", "minRT","maxRT", "peakMZ", "peakRT", "peakIntensity", "fwhm", "intensitySum",""});
 
       List<IsotopeTrace> traces = mzTree.bundleTraces().synthesize();
       for(int i = 0; i < traces.size(); ++i){
@@ -109,6 +109,7 @@ public class CsvExporter implements AutoCloseable{
 
         outputWriter.writeNext(new String[] {
           Integer.toString(traces.get(i).traceID),
+          Integer.toString(traces.get(i).envelopeID),
           Double.toString(minMZ),
           Double.toString(maxMZ),
           Double.toString(minRT),
@@ -137,7 +138,7 @@ public class CsvExporter implements AutoCloseable{
 
      
 
-      outputWriter.writeNext(new String[] { "monoIsotopicMz","monoIsotopicRT","chargeState","minMZ","maxMZ","minRT","maxRT","totalAbundance","relativeIntensities"});
+      outputWriter.writeNext(new String[] { "envelopeID, monoIsotopicMz","monoIsotopicRT","chargeState","minMZ","maxMZ","minRT","maxRT","totalAbundance","relativeIntensities"});
 
       List<IsotopicEnvelope> Envelopes = new TraceClusterer().clusterTraces(traces, ProbabilityAggregator.PROB_MODEL.BAYESIAN, null);
   
@@ -182,6 +183,7 @@ public class CsvExporter implements AutoCloseable{
         }
         //envelopeOutput += Envelopes.get(i).monoisotopicMZ + "," + Envelopes.get(i).monoisotopicRT + "," + Envelopes.get(i).chargeState + "," + minMZ + "," + maxMZ + "," + minRT + "," + maxRT + "," +intensitySum + ",";
         outputWriter.writeNext(new String[] {
+          Integer.toString(Envelopes.get(i).envelopeID),
           Double.toString(Envelopes.get(i).monoisotopicMZ),
           Double.toString(Envelopes.get(i).monoisotopicRT),
           Double.toString(Envelopes.get(i).chargeState),
