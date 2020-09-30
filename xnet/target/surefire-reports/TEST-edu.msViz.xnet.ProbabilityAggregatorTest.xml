@@ -57,7 +57,7 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
   </properties>
-  <testcase classname="edu.msViz.xnet.ProbabilityAggregatorTest" name="BayesCorrTest" time="0"/>
-  <testcase classname="edu.msViz.xnet.ProbabilityAggregatorTest" name="BayesSepTest" time="0.004"/>
+  <testcase classname="edu.msViz.xnet.ProbabilityAggregatorTest" name="BayesCorrTest" time="0.001"/>
+  <testcase classname="edu.msViz.xnet.ProbabilityAggregatorTest" name="BayesSepTest" time="0.003"/>
   <testcase classname="edu.msViz.xnet.ProbabilityAggregatorTest" name="BayesianAssocTest" time="0"/>
 </testsuite>
